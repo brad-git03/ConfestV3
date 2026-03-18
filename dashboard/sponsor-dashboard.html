@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sponsor Dashboard | Pampanga Events</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Instrument+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson:    #C41E3A;
+  --ember:      #D4460A;
+  --gold:       #D4920A;
+  --amber:      #F0B429;
+  --lantern-glow: #FF6B1A;
+  --forest:     #1B3A2D;
+  --moss:       #2D5A3D;
+  --sage:       #4A7C5F;
+  --fern:       #6B9E7A;
+  --mist:       #C8DDD0;
+  --ink:        #120808;
+  --charcoal:   #2A1515;
+  --parchment:  #FBF4E8;
+  --cream:      #FFF8EF;
+  --bone:       #F5EDD8;
+  --g-fire:   linear-gradient(135deg, #8B0000 0%, #C41E3A 40%, #D4920A 100%);
+  --g-ember:  linear-gradient(160deg, #5C0010 0%, #C41E3A 50%, #D4920A 100%);
+  --g-eco:    linear-gradient(135deg, #1B3A2D 0%, #2D5A3D 60%, #4A7C5F 100%);
+  --g-dusk:   linear-gradient(180deg, #120808 0%, #2A1515 50%, #1B3A2D 100%);
+  --g-gold:   linear-gradient(135deg, #b45309 0%, #D4920A 50%, #F0B429 100%);
+  --glow-fire:  0 0 40px rgba(196,30,58,0.4), 0 8px 32px rgba(196,30,58,0.2);
+  --glow-gold:  0 0 30px rgba(212,146,10,0.45), 0 4px 20px rgba(212,146,10,0.25);
+  --shadow-card: 0 2px 16px rgba(18,8,8,0.1), 0 1px 4px rgba(18,8,8,0.06);
+  --shadow-lift: 0 20px 60px rgba(18,8,8,0.2), 0 4px 16px rgba(18,8,8,0.1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Instrument Sans', sans-serif; background: var(--bone); color: var(--ink); overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+/* ── LAYOUT ── */
+.dashboard-layout { display: flex; min-height: 100vh; }
+.sidebar { width: 252px; background: var(--g-dusk); position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100; border-right: 1px solid rgba(212,146,10,0.1); display: flex; flex-direction: column; }
+.sidebar-logo { padding: 1.3rem 1.4rem; border-bottom: 1px solid rgba(212,146,10,0.1); }
+.sidebar-role { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(200,221,208,0.3); margin-top: 0.2rem; font-weight: 700; }
+.sidebar-user { padding: 1rem 1.4rem; border-bottom: 1px solid rgba(212,146,10,0.08); display: flex; align-items: center; gap: 0.75rem; }
+.sidebar-avatar { width: 40px; height: 40px; border-radius: 10px; background: var(--g-gold); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: white; box-shadow: 0 4px 12px rgba(212,146,10,0.35); flex-shrink: 0; }
+.sidebar-name { font-size: 0.8rem; font-weight: 700; color: var(--bone); }
+.sidebar-email { font-size: 0.65rem; color: rgba(200,221,208,0.3); }
+.sidebar-nav { padding: 0.75rem 0; flex: 1; }
+.sidebar-section { font-size: 0.57rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(200,221,208,0.22); font-weight: 700; padding: 0.75rem 1.4rem 0.35rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1.4rem; color: rgba(200,221,208,0.5); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; border-left: 2.5px solid transparent; position: relative; }
+.sidebar-link:hover { background: rgba(212,146,10,0.07); color: var(--amber); border-left-color: rgba(212,146,10,0.3); }
+.sidebar-link.active { background: rgba(212,146,10,0.14); color: #FFC9A0; border-left-color: var(--amber); }
+.sidebar-link .icon { font-size: 0.95rem; width: 20px; text-align: center; }
+.sidebar-link .badge-dot { position: absolute; right: 1.2rem; background: var(--crimson); color: white; font-size: 0.55rem; font-weight: 800; min-width: 16px; height: 16px; border-radius: 8px; display: none; align-items: center; justify-content: center; padding: 0 4px; }
+.sidebar-eco { margin: auto 1.2rem 1.2rem; background: rgba(27,58,45,0.3); border: 1px solid rgba(75,124,95,0.2); border-radius: 10px; padding: 0.875rem; }
+.sidebar-eco p { font-size: 0.68rem; color: rgba(200,221,208,0.6); line-height: 1.55; }
+.dashboard-main { margin-left: 252px; flex: 1; background: var(--bone); min-height: 100vh; }
+.dashboard-topbar { background: var(--cream); padding: 0.875rem 2rem; border-bottom: 1px solid rgba(212,146,10,0.1); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(18,8,8,0.05); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+.dashboard-content { padding: 1.75rem; }
+.dashboard-page { display: none; }
+.dashboard-page.active { display: block; }
+
+/* ── STAT CARDS ── */
+.stat-card { background: white; border-radius: 12px; padding: 1.3rem; border: 1px solid rgba(212,146,10,0.1); display: flex; align-items: center; gap: 0.875rem; box-shadow: var(--shadow-card); }
+.stat-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+.stat-icon.fire { background: rgba(196,30,58,0.1); }
+.stat-icon.gold { background: rgba(212,146,10,0.1); }
+.stat-icon.eco  { background: rgba(27,58,45,0.1); }
+.stat-icon.blue { background: rgba(37,99,235,0.08); }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 1.65rem; font-weight: 700; color: var(--ink); line-height: 1; }
+.stat-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-top: 0.15rem; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { padding: 0.65rem 0.875rem; text-align: left; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; color: var(--sage); background: rgba(212,146,10,0.04); border-bottom: 1.5px solid rgba(212,146,10,0.1); }
+.data-table td { padding: 0.75rem 0.875rem; border-bottom: 1px solid rgba(212,146,10,0.07); font-size: 0.8rem; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(212,146,10,0.02); }
+
+/* ── BUTTONS ── */
+.btn-fire { background: var(--g-fire); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 16px rgba(196,30,58,0.3); }
+.btn-fire:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,30,58,0.5); }
+.btn-eco { background: var(--g-eco); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 16px rgba(27,58,45,0.3); }
+.btn-eco:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(27,58,45,0.45); }
+.btn-gold { background: var(--g-gold); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 14px rgba(212,146,10,0.35); }
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,146,10,0.5); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid rgba(212,146,10,0.25); padding: 0.65rem 1.4rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-ghost:hover { border-color: var(--ember); color: var(--ember); }
+.btn-sm { padding: 0.42rem 0.95rem; font-size: 0.68rem; }
+.btn-danger { background: rgba(196,30,58,0.1); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); padding: 0.4rem 0.875rem; border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-danger:hover { background: var(--crimson); color: white; }
+.btn-success { background: rgba(27,58,45,0.1); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); padding: 0.4rem 0.875rem; border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-success:hover { background: var(--moss); color: white; }
+
+/* ── FORMS ── */
+.form-group { margin-bottom: 1.1rem; }
+.form-label { display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--charcoal); margin-bottom: 0.4rem; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 0.7rem 0.95rem; border: 1.5px solid rgba(212,146,10,0.2); border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.88rem; color: var(--ink); background: white; transition: all 0.2s; outline: none; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,146,10,0.1); }
+.form-textarea { resize: vertical; min-height: 88px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(18,8,8,0.78); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; visibility: hidden; transition: all 0.3s; }
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal { background: var(--cream); border-radius: 20px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; padding: 2.25rem; transform: scale(0.9) translateY(20px); transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 40px 80px rgba(18,8,8,0.35); border: 1px solid rgba(212,146,10,0.18); }
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1.5px solid rgba(212,146,10,0.12); }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; }
+.modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(18,8,8,0.07); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: var(--ink); transition: all 0.2s; }
+.modal-close:hover { background: rgba(196,30,58,0.1); color: var(--crimson); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.badge-pending  { background: rgba(212,146,10,0.1); color: #b45309; border: 1px solid rgba(212,146,10,0.25); }
+.badge-accepted { background: rgba(27,58,45,0.1); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.badge-rejected { background: rgba(196,30,58,0.08); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); }
+.badge-declined { background: rgba(196,30,58,0.08); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); }
+.badge-inquired { background: rgba(37,99,235,0.08); color: #1d4ed8; border: 1px solid rgba(37,99,235,0.2); }
+.badge-basic    { background: rgba(196,30,58,0.08); color: var(--crimson); border: 1px solid rgba(196,30,58,0.18); }
+.badge-premium  { background: rgba(212,146,10,0.12); color: #b45309; border: 1px solid rgba(212,146,10,0.3); }
+
+/* ── CARD ── */
+.card-box { background: white; border-radius: 14px; padding: 1.5rem; border: 1px solid rgba(212,146,10,0.1); box-shadow: var(--shadow-card); }
+.card-title-sm { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 1.1rem; }
+
+/* ── FILTER TABS ── */
+.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.filter-tab { padding: 0.42rem 1.1rem; border: 1.5px solid rgba(212,146,10,0.18); border-radius: 6px; background: white; color: var(--sage); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; cursor: pointer; transition: all 0.2s; font-family: 'Instrument Sans', sans-serif; text-transform: uppercase; }
+.filter-tab:hover, .filter-tab.active { border-color: var(--crimson); background: var(--crimson); color: white; }
+
+/* ── ALERT ── */
+.alert { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.875rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.alert-info    { background: rgba(37,99,235,0.07);   color: #1d4ed8; border: 1px solid rgba(37,99,235,0.18); }
+.alert-success { background: rgba(27,58,45,0.1);     color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.alert-warning { background: rgba(212,146,10,0.1);   color: var(--gold); border: 1px solid rgba(212,146,10,0.22); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 1.75rem; right: 1.75rem; background: var(--ink); color: var(--bone); padding: 0.875rem 1.3rem; border-radius: 10px; box-shadow: 0 10px 40px rgba(18,8,8,0.35); z-index: 9999; display: flex; align-items: center; gap: 0.65rem; transform: translateY(80px); opacity: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); border-left: 3px solid var(--gold); max-width: 330px; font-size: 0.82rem; font-weight: 600; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left-color: var(--moss); }
+.toast.error   { border-left-color: var(--crimson); }
+.toast.warning { border-left-color: var(--amber); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.anim { animation: fadeInUp 0.55s ease forwards; opacity: 0; }
+.d1{animation-delay:0.05s}.d2{animation-delay:0.12s}.d3{animation-delay:0.19s}.d4{animation-delay:0.26s}
+
+/* ── TIER CARD ── */
+.tier-card { border: 2px solid rgba(212,146,10,0.2); border-radius: 16px; padding: 1.75rem; background: white; transition: all 0.3s; position: relative; overflow: hidden; }
+.tier-card.basic  { border-color: rgba(196,30,58,0.25); }
+.tier-card.premium { border-color: rgba(212,146,10,0.4); box-shadow: 0 0 0 1px rgba(212,146,10,0.1), var(--glow-gold); }
+.tier-card .tier-price { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--ink); line-height: 1; }
+.tier-card .tier-period { font-size: 0.72rem; color: var(--sage); font-weight: 700; }
+.tier-feature { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid rgba(212,146,10,0.06); font-size: 0.8rem; color: var(--charcoal); }
+.tier-feature:last-child { border-bottom: none; }
+.tier-feature .chk { flex-shrink: 0; width: 16px; }
+
+/* ── INVITATION CARD ── */
+.inv-card { background: white; border: 1px solid rgba(212,146,10,0.12); border-radius: 14px; padding: 1.4rem; transition: all 0.3s; }
+.inv-card:hover { border-color: rgba(212,146,10,0.35); box-shadow: 0 6px 24px rgba(18,8,8,0.08); }
+.inv-card.new-inv { border-left: 3px solid var(--amber); }
+
+/* ── PROGRESS ── */
+.progress-bar { height: 5px; background: rgba(212,146,10,0.1); border-radius: 50px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--g-fire); border-radius: 50px; transition: width 0.6s; }
+.progress-fill.gold { background: var(--g-gold); }
+
+/* ── PREMIUM LOCK OVERLAY ── */
+.premium-lock { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; text-align: center; background: rgba(212,146,10,0.04); border: 2px dashed rgba(212,146,10,0.2); border-radius: 14px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s}.sidebar.open{transform:translateX(0)}
+  .dashboard-main{margin-left:0}
+  .form-row{grid-template-columns:1fr}
+  #sidebarToggle{display:flex!important}
+}
+</style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" style="display:inline-flex;align-items:center;text-decoration:none;">
+      <svg width="160" height="34" viewBox="0 0 160 34" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dl-fire" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#E8453A"/><stop offset="100%" style="stop-color:#F0B429"/></linearGradient>
+          <linearGradient id="dl-eco"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6B9E7A"/><stop offset="100%" style="stop-color:#A8D5B8"/></linearGradient>
+          <linearGradient id="dl-gold" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#F0B429"/><stop offset="100%" style="stop-color:#FFD080"/></linearGradient>
+        </defs>
+        <g transform="translate(2,1)">
+          <ellipse cx="13" cy="16" rx="7" ry="9.5" fill="url(#dl-fire)" opacity="0.1"/>
+          <ellipse cx="13" cy="16" rx="6.5" ry="9" fill="none" stroke="url(#dl-fire)" stroke-width="1.4"/>
+          <rect x="10" y="6" width="7" height="3" rx="1.2" fill="url(#dl-gold)"/>
+          <path d="M13 6 L13 2.5 Q13 1 15.5 1" fill="none" stroke="url(#dl-gold)" stroke-width="0.9" stroke-linecap="round"/>
+          <line x1="13" y1="25" x2="13" y2="30" stroke="url(#dl-gold)" stroke-width="1" stroke-linecap="round"/>
+          <path d="M20 22 Q24 19 23 14 Q22 17 19 20 Z" fill="url(#dl-eco)" opacity="0.5"/>
+        </g>
+        <text x="32" y="22" font-family="'Cinzel Decorative', serif" font-size="16" font-weight="900" fill="url(#dl-fire)" letter-spacing="1">CON</text>
+        <text x="81" y="22" font-family="'Cinzel Decorative', serif" font-size="16" font-weight="900" fill="url(#dl-eco)" letter-spacing="1">FEST</text>
+      </svg>
+    </a>
+    <div class="sidebar-role">Sponsor Portal</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="sidebar-avatar" id="sidebarAvatar">SP</div>
+    <div>
+      <div class="sidebar-name" id="sidebarName">Sponsor</div>
+      <div class="sidebar-email" id="sidebarEmail">sponsor@company.com</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">Main</div>
+    <button class="sidebar-link active" data-page="spOverview" onclick="showPage('spOverview')"><span class="icon">📊</span><span>Dashboard</span></button>
+    <div class="sidebar-section">Sponsorships</div>
+    <button class="sidebar-link" data-page="spApply" onclick="showPage('spApply')"><span class="icon">📝</span><span>Apply to Events</span></button>
+    <button class="sidebar-link" data-page="spInvitations" onclick="showPage('spInvitations')"><span class="icon">📧</span><span>Invitations</span><span class="badge-dot" id="invBadge">0</span></button>
+    <button class="sidebar-link" data-page="spMySponsorships" onclick="showPage('spMySponsorships')"><span class="icon">🎪</span><span>My Sponsorships</span></button>
+    <div class="sidebar-section">Premium</div>
+    <button class="sidebar-link" data-page="spAnalytics" onclick="showPage('spAnalytics')"><span class="icon">📈</span><span>Analytics</span></button>
+    <div class="sidebar-section">Account</div>
+    <button class="sidebar-link" data-page="spProfile" onclick="showPage('spProfile')"><span class="icon">👤</span><span>Profile & Logo</span></button>
+    <button class="sidebar-link" data-page="spSubscription" onclick="showPage('spSubscription')"><span class="icon">💳</span><span>Subscription</span></button>
+    <div class="sidebar-section">Navigation</div>
+    <a class="sidebar-link" href="../index.html"><span class="icon">🌐</span><span>Public Site</span></a>
+    <a class="sidebar-link" href="../events.html"><span class="icon">🎟️</span><span>View Events</span></a>
+    <a class="sidebar-link" href="../login.html"><span class="icon">🚪</span><span>Sign Out</span></a>
+  </nav>
+  <div class="sidebar-eco">
+    <div style="font-size:0.58rem;color:var(--fern);font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem">🏢 Sponsor Portal</div>
+    <p>Support Pampanga's festivals and connect with thousands of attendees.</p>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="dashboard-main">
+  <div class="dashboard-topbar">
+    <div style="display:flex;align-items:center;gap:0.875rem">
+      <button id="sidebarToggle" style="display:none;background:none;border:none;cursor:pointer;font-size:1.2rem" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+      <h2 class="topbar-title" id="pageTitle">Dashboard</h2>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem">
+      <span id="planBadge" class="badge badge-basic">🌱 Basic</span>
+      <button class="btn-gold btn-sm" onclick="showPage('spApply')">＋ Apply to Event</button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="dashboard-page active" id="spOverview">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.75rem">
+        <div class="stat-card anim d1"><div class="stat-icon gold">📝</div><div><div class="stat-num" id="statApps">0</div><div class="stat-label">Applications</div></div></div>
+        <div class="stat-card anim d2"><div class="stat-icon eco">✅</div><div><div class="stat-num" id="statAccepted">0</div><div class="stat-label">Accepted</div></div></div>
+        <div class="stat-card anim d3"><div class="stat-icon fire">📧</div><div><div class="stat-num" id="statInvites">0</div><div class="stat-label">Invitations</div></div></div>
+        <div class="stat-card anim d4"><div class="stat-icon blue">🎪</div><div><div class="stat-num" id="statEvents">0</div><div class="stat-label">Active Events</div></div></div>
+      </div>
+
+      <!-- Monthly usage counter -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">📅 Monthly Application Usage</h3>
+          <div style="margin-bottom:0.75rem">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.4rem">
+              <span>Events applied this month</span>
+              <strong><span id="usedApps">0</span> / <span id="maxApps">3</span></strong>
+            </div>
+            <div class="progress-bar"><div class="progress-fill gold" id="usageBar" style="width:0%"></div></div>
+            <div style="font-size:0.68rem;color:var(--sage);margin-top:0.35rem" id="usageNote">3 remaining this month</div>
+          </div>
+          <button class="btn-fire btn-sm" style="width:100%;justify-content:center" onclick="showPage('spApply')">＋ Apply to Sponsor Event</button>
+        </div>
+        <div class="card-box">
+          <h3 class="card-title-sm">🚀 Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:0.6rem">
+            <button class="btn-fire" style="justify-content:flex-start" onclick="showPage('spApply')">📝 Apply to Events</button>
+            <button class="btn-gold" style="justify-content:flex-start" onclick="showPage('spInvitations')">📧 View Invitations</button>
+            <button class="btn-ghost" style="justify-content:flex-start" onclick="showPage('spProfile')">👤 Update Profile</button>
+            <button class="btn-eco" style="justify-content:flex-start" onclick="showPage('spSubscription')">💳 Manage Subscription</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Applications -->
+      <div class="card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h3 class="card-title-sm" style="margin-bottom:0">📋 Recent Applications</h3>
+          <button class="btn-ghost btn-sm" onclick="showPage('spMySponsorships')">View All →</button>
+        </div>
+        <div id="recentAppsList"></div>
+      </div>
+    </div>
+
+    <!-- ── APPLY TO EVENTS ── -->
+    <div class="dashboard-page" id="spApply">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">Apply to Sponsor Events</h2>
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span style="font-size:0.78rem;color:var(--sage)">Applications this month:</span>
+          <strong id="applyCounter" style="color:var(--crimson)">0 / 3</strong>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--sage);margin-bottom:1.5rem">Browse upcoming events and submit your sponsorship application. Select your tier and explain why you'd be a great sponsor.</p>
+
+      <div id="eventsForSponsor" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem"></div>
+    </div>
+
+    <!-- ── INVITATIONS ── -->
+    <div class="dashboard-page" id="spInvitations">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">📧 Sponsorship Invitations</h2>
+      </div>
+      <div id="invitationsSection">
+        <!-- Rendered by JS based on subscription tier -->
+      </div>
+    </div>
+
+    <!-- ── MY SPONSORSHIPS ── -->
+    <div class="dashboard-page" id="spMySponsorships">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.4rem">🎪 My Sponsorships</h2>
+      <div style="display:flex;gap:0.4rem;margin-bottom:1.2rem;flex-wrap:wrap" id="mySponsFilterTabs">
+        <button class="filter-tab active" data-status="all" onclick="filterMySponsorships('all',this)">All</button>
+        <button class="filter-tab" data-status="pending" onclick="filterMySponsorships('pending',this)">⏳ Pending</button>
+        <button class="filter-tab" data-status="accepted" onclick="filterMySponsorships('accepted',this)">✅ Accepted</button>
+        <button class="filter-tab" data-status="rejected" onclick="filterMySponsorships('rejected',this)">❌ Rejected</button>
+      </div>
+      <div class="card-box" style="padding:0;overflow:hidden">
+        <table class="data-table">
+          <thead><tr><th>Event</th><th>Tier</th><th>Amount</th><th>Status</th><th>Applied</th><th>Decision</th></tr></thead>
+          <tbody id="mySponsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div class="dashboard-page" id="spAnalytics">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.4rem">📈 Sponsorship Analytics</h2>
+      <div id="analyticsSection">
+        <!-- Rendered by JS based on subscription tier -->
+      </div>
+    </div>
+
+    <!-- ── PROFILE ── -->
+    <div class="dashboard-page" id="spProfile">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.4rem">👤 Sponsor Profile</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">🏢 Company Information</h3>
+          <div class="form-group"><label class="form-label">Company Name</label><input type="text" class="form-input" id="profileCompany" placeholder="e.g. Kapampangan Corp."></div>
+          <div class="form-group"><label class="form-label">Industry / Category</label>
+            <select class="form-select" id="profileIndustry">
+              <option value="">Select industry...</option>
+              <option>Food & Beverage</option><option>Banking & Finance</option><option>Retail</option>
+              <option>Technology</option><option>Healthcare</option><option>Tourism & Hospitality</option>
+              <option>Media & Entertainment</option><option>Government / NGO</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Contact Person</label><input type="text" class="form-input" id="profileContact" placeholder="Full name"></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="profileEmail" placeholder="email@company.com"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="profilePhone" placeholder="09XX-XXX-XXXX"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Website</label><input type="url" class="form-input" id="profileWebsite" placeholder="https://www.company.com"></div>
+          <div class="form-group"><label class="form-label">Company Description</label><textarea class="form-textarea" id="profileDesc" placeholder="Brief description of your company..."></textarea></div>
+          <button class="btn-fire" style="width:100%;justify-content:center" onclick="saveProfile()">💾 Save Profile</button>
+        </div>
+        <div>
+          <div class="card-box" style="margin-bottom:1.1rem">
+            <h3 class="card-title-sm">🖼️ Logo Upload</h3>
+            <div id="logoSection">
+              <!-- Rendered by JS based on tier -->
+            </div>
+          </div>
+          <div class="card-box" id="premiumProfileExtras" style="display:none">
+            <h3 class="card-title-sm">⭐ Premium Profile Extras</h3>
+            <div class="form-group"><label class="form-label">Sponsor Bio</label><textarea class="form-textarea" id="profileBio" placeholder="Tell attendees about your brand (2-3 sentences)..." style="min-height:80px"></textarea></div>
+            <div class="form-group"><label class="form-label">Facebook URL</label><input type="url" class="form-input" id="profileFacebook" placeholder="https://facebook.com/yourpage"></div>
+            <div class="form-group"><label class="form-label">Instagram URL</label><input type="url" class="form-input" id="profileInstagram" placeholder="https://instagram.com/yourhandle"></div>
+            <div class="form-group"><label class="form-label">Twitter / X URL</label><input type="url" class="form-input" id="profileTwitter" placeholder="https://x.com/yourhandle"></div>
+            <button class="btn-gold" style="width:100%;justify-content:center" onclick="saveProfile()">💾 Save Premium Info</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUBSCRIPTION ── -->
+    <div class="dashboard-page" id="spSubscription">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.35rem">💳 Subscription Plans</h2>
+      <p style="font-size:0.82rem;color:var(--sage);margin-bottom:1.75rem">Choose the plan that fits your sponsorship goals.</p>
+
+      <!-- Current plan banner -->
+      <div id="currentPlanBanner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;padding:0.875rem 1.25rem;border-radius:12px;background:rgba(212,146,10,0.07);border:1.5px solid rgba(212,146,10,0.2);margin-bottom:1.75rem">
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span id="curPlanIcon" style="font-size:1.3rem">🌱</span>
+          <div>
+            <div id="curPlanName" style="font-weight:700;font-size:0.88rem">Basic Plan — ₱299/month</div>
+            <div id="curPlanRenew" style="font-size:0.72rem;color:var(--sage)">Auto-renews on the 1st of each month</div>
+          </div>
+        </div>
+        <span id="curPlanBadge" class="badge badge-basic">Active</span>
+      </div>
+
+      <!-- Tier comparison -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:2rem">
+        <!-- Basic -->
+        <div class="tier-card basic" id="basicTierCard">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+            <div>
+              <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--crimson);margin-bottom:0.3rem">🌱 Basic</div>
+              <div class="tier-price">₱299</div>
+              <div class="tier-period">per month</div>
+            </div>
+            <span id="basicCurrentBadge" class="badge badge-accepted">✓ Current</span>
+          </div>
+          <div style="margin-bottom:1.25rem">
+            <div class="tier-feature"><span class="chk">✅</span> Apply to up to <strong>3 events/month</strong></div>
+            <div class="tier-feature"><span class="chk">✅</span> Sponsorship application form</div>
+            <div class="tier-feature"><span class="chk">✅</span> Small logo on event pages (50×50px)</div>
+            <div class="tier-feature"><span class="chk">✅</span> Basic sponsor listing</div>
+            <div class="tier-feature"><span class="chk">✅</span> Application status tracking</div>
+            <div class="tier-feature"><span class="chk">✅</span> Simple logo upload</div>
+            <div class="tier-feature"><span class="chk">❌</span> <span style="color:var(--sage)">Cannot receive invitations</span></div>
+            <div class="tier-feature"><span class="chk">❌</span> <span style="color:var(--sage)">No analytics dashboard</span></div>
+          </div>
+          <button class="btn-ghost" id="basicBtn" style="width:100%;justify-content:center" onclick="selectPlan('basic')">Current Plan</button>
+        </div>
+        <!-- Premium -->
+        <div class="tier-card premium" id="premiumTierCard">
+          <div style="position:absolute;top:0;right:0;background:var(--g-gold);color:white;font-size:0.58rem;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.875rem;border-radius:0 14px 0 8px">Most Popular</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;margin-right:4rem">
+            <div>
+              <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem">⭐ Premium</div>
+              <div class="tier-price">₱599</div>
+              <div class="tier-period">per month</div>
+            </div>
+            <span id="premiumCurrentBadge" class="badge badge-accepted" style="display:none">✓ Current</span>
+          </div>
+          <div style="margin-bottom:1.25rem">
+            <div class="tier-feature"><span class="chk">✅</span> Apply to up to <strong>8 events/month</strong></div>
+            <div class="tier-feature"><span class="chk">✅</span> <strong>Receive sponsorship invitations</strong></div>
+            <div class="tier-feature"><span class="chk">✅</span> Large logo on event pages (150×150px)</div>
+            <div class="tier-feature"><span class="chk">✅</span> Featured sponsor section + bio</div>
+            <div class="tier-feature"><span class="chk">✅</span> Social media links on event</div>
+            <div class="tier-feature"><span class="chk">✅</span> Analytics & performance metrics</div>
+            <div class="tier-feature"><span class="chk">✅</span> Multiple logo versions</div>
+            <div class="tier-feature"><span class="chk">✅</span> Priority placement + premium badge</div>
+          </div>
+          <button class="btn-gold" id="premiumBtn" style="width:100%;justify-content:center" onclick="selectPlan('premium')">⭐ Upgrade to Premium</button>
+        </div>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="card-box">
+        <h3 class="card-title-sm">📊 Feature Comparison</h3>
+        <table class="data-table">
+          <thead><tr><th>Feature</th><th>Basic (₱299)</th><th>Premium (₱599)</th></tr></thead>
+          <tbody>
+            <tr><td>Events per Month</td><td>3</td><td>8</td></tr>
+            <tr><td>Apply to Events</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+            <tr><td>Receive Invitations</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Logo Size</td><td>Small (50px)</td><td>Large (150px+)</td></tr>
+            <tr><td>Featured Sponsor Badge</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Analytics Dashboard</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Custom Bio / Description</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Social Links Display</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Priority Placement</td><td>❌ No</td><td>✅ Yes</td></tr>
+            <tr><td>Multiple Logo Versions</td><td>Single</td><td>Unlimited</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- ════════════ MODALS ════════════ -->
+
+<!-- Apply to Sponsor Modal -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">📝 Apply as Sponsor</h2>
+      <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
+    </div>
+    <input type="hidden" id="applyEventId">
+    <div id="applyEventInfo" style="background:rgba(212,146,10,0.07);border:1px solid rgba(212,146,10,0.2);border-radius:10px;padding:0.875rem;margin-bottom:1.25rem;font-size:0.82rem"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Sponsorship Tier</label>
+        <select class="form-select" id="applyTier">
+          <option value="platinum">🥇 Platinum</option>
+          <option value="gold">🥈 Gold</option>
+          <option value="silver" selected>🥉 Silver</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Amount Offering (₱)</label>
+        <input type="number" class="form-input" id="applyAmount" placeholder="e.g. 5000" min="500">
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Why Sponsor This Event?</label>
+      <textarea class="form-textarea" id="applyReason" placeholder="Explain your sponsorship goals, how you can support the event, and what you're offering..." style="min-height:100px"></textarea>
+    </div>
+    <div class="form-group"><label class="form-label">What You're Offering</label>
+      <textarea class="form-textarea" id="applyOffer" placeholder="e.g. Cash sponsorship, in-kind products, media coverage, booths..." style="min-height:72px"></textarea>
+    </div>
+    <button class="btn-fire" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="submitApplication()">Submit Application →</button>
+  </div>
+</div>
+
+<!-- Invitation Detail Modal -->
+<div class="modal-overlay" id="invDetailModal">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-header">
+      <h2 class="modal-title">📧 Invitation Details</h2>
+      <button class="modal-close" onclick="closeModal('invDetailModal')">✕</button>
+    </div>
+    <div id="invDetailContent"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;flex-wrap:wrap" id="invDetailActions"></div>
+  </div>
+</div>
+
+<!-- Decline / Inquire Modal -->
+<div class="modal-overlay" id="invResponseModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="invResponseTitle">Respond to Invitation</h2>
+      <button class="modal-close" onclick="closeModal('invResponseModal')">✕</button>
+    </div>
+    <input type="hidden" id="invResponseId">
+    <input type="hidden" id="invResponseAction">
+    <div class="form-group"><label class="form-label" id="invResponseLabel">Reason / Message</label>
+      <textarea class="form-textarea" id="invResponseText" placeholder="Enter your message..."></textarea>
+    </div>
+    <button class="btn-fire" style="width:100%;justify-content:center" onclick="submitInvResponse()">Submit →</button>
+  </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal" style="text-align:center">
+    <div class="modal-header" style="justify-content:center;padding-bottom:0.75rem;border:none">
+      <button class="modal-close" style="position:absolute;right:2rem" onclick="closeModal('upgradeModal')">✕</button>
+    </div>
+    <div style="font-size:2.5rem;margin-bottom:0.75rem">⭐</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.5rem">Upgrade to Premium</h2>
+    <p style="font-size:0.85rem;color:var(--sage);margin-bottom:1.5rem">Unlock invitations, large logos, analytics and priority placement for just ₱599/month.</p>
+    <button class="btn-gold" style="width:100%;justify-content:center;margin-bottom:0.75rem" onclick="selectPlan('premium')">⭐ Upgrade Now — ₱599/month</button>
+    <button class="btn-ghost" style="width:100%;justify-content:center" onclick="closeModal('upgradeModal')">Maybe Later</button>
+  </div>
+</div>
+
+<!-- ════════════ SCRIPT ════════════ -->
+<script>
+// ── DATA ─────────────────────────────────────────────────────
+const PampangaDB = {
+  events: [
+    { id:1, name:"Ligligan Parul Sampernandu", category:"Festival",  date:"2025-12-17", location:"Bacolor, Pampanga",        image:"🏮", capacity:5000,  attendees:5000 },
+    { id:2, name:"Sisig Food Festival",        category:"Food",      date:"2025-10-20", location:"Pampanga Capitol Grounds",  image:"🍽️", capacity:3000, attendees:3000 },
+    { id:3, name:"Apung Iru Fluvial Parade",   category:"Cultural",  date:"2025-06-23", location:"Candaba River, Pampanga",   image:"⛵", capacity:10000, attendees:10000 },
+    { id:4, name:"Pampanga Summer Concert",    category:"Concert",   date:"2025-04-15", location:"SM City Pampanga",          image:"🎵", capacity:8000,  attendees:8000 },
+    { id:5, name:"Kulinarya Pampanga Festival",category:"Food",      date:"2025-08-10", location:"Angeles City Convention",   image:"👨‍🍳",capacity:2000,  attendees:2000 },
+    { id:6, name:"Sinukwan Folk Arts Festival",category:"Cultural",  date:"2025-09-05", location:"San Fernando Heritage Park",image:"🎭", capacity:1500,  attendees:1500 }
+  ]
+};
+
+const Storage = {
+  get:    (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set:    (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  remove: (k) => localStorage.removeItem(k)
+};
+
+// ── GETTERS / SETTERS ─────────────────────────────────────────
+const getSponsorPlan   = () => Storage.get('sponsor_plan') || 'basic';
+const saveSponsorPlan  = (p) => Storage.set('sponsor_plan', p);
+const getApplications  = () => Storage.get('sponsor_applications') || [];
+const saveApplications = (d) => Storage.set('sponsor_applications', d);
+const getInvitations   = () => Storage.get('sponsor_invitations') || [];
+const saveInvitations  = (d) => Storage.set('sponsor_invitations', d);
+const getProfile       = () => Storage.get('sponsor_profile') || {};
+const saveProfileData  = (d) => Storage.set('sponsor_profile', d);
+
+function getThisMonthApps() {
+  const now = new Date();
+  return getApplications().filter(a => {
+    const d = new Date(a.appliedDate);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  });
+}
+function getMaxApps() { return getSponsorPlan() === 'premium' ? 8 : 3; }
+function nextId(arr) { return arr.length ? Math.max(...arr.map(x=>x.id))+1 : 1; }
+
+// ── SAMPLE DATA (first visit) ─────────────────────────────────
+function seedData() {
+  if (Storage.get('sponsor_seeded')) return;
+  Storage.set('sponsor_seeded', true);
+
+  const apps = [
+    { id:1, eventId:1, eventName:"Ligligan Parul Sampernandu", eventImage:"🏮", tier:"gold", amount:5000, reason:"Long-time supporter of Pampanga festivals.", offer:"Cash + promotional banners", status:"accepted", appliedDate:"2026-03-01", decisionDate:"2026-03-03" },
+    { id:2, eventId:2, eventName:"Sisig Food Festival", eventImage:"🍽️", tier:"silver", amount:3000, reason:"Our products align with food festivals.", offer:"Product samples & cash", status:"pending", appliedDate:"2026-03-10", decisionDate:null },
+    { id:3, eventId:5, eventName:"Kulinarya Pampanga Festival", eventImage:"👨‍🍳", tier:"silver", amount:2000, reason:"Great venue for brand visibility.", offer:"Cash sponsorship", status:"rejected", appliedDate:"2026-02-28", decisionDate:"2026-03-02" }
+  ];
+  saveApplications(apps);
+
+  const invitations = [
+    { id:1, eventId:1, eventName:"Ligligan Parul Sampernandu", eventImage:"🏮", eventDate:"2025-12-17", eventLocation:"Bacolor, Pampanga", expectedAttendees:5000, organizerName:"Maria Santos", organizerEmail:"maria@pampangatourism.gov", organizerPhone:"(045) 123-4567", tier:"platinum", suggestedAmount:10000, requirements:"Logo on event posters, booth space (10×10ft), speaking opportunity", status:"pending", sentDate:"2026-03-12", respondDate:null, enquiries:[] },
+    { id:2, eventId:6, eventName:"Sinukwan Folk Arts Festival", eventImage:"🎭", eventDate:"2025-09-05", eventLocation:"San Fernando Heritage Park", expectedAttendees:1500, organizerName:"Juan Dela Cruz", organizerEmail:"juan@artscouncil.ph", organizerPhone:"(045) 234-5678", tier:"gold", suggestedAmount:5000, requirements:"Logo placement, social media mention", status:"pending", sentDate:"2026-03-14", respondDate:null, enquiries:[] }
+  ];
+  saveInvitations(invitations);
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const ex = document.querySelector('.toast');
+  if (ex) ex.remove();
+  const icons = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||icons.info}</span><span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(id)  { const m = document.getElementById(id); if(m){ m.classList.add('open'); document.body.style.overflow='hidden'; } }
+function closeModal(id) { const m = document.getElementById(id); if(m){ m.classList.remove('open'); document.body.style.overflow=''; } }
+document.addEventListener('click', e => { if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('open'); document.body.style.overflow=''; } });
+
+// ── HELPERS ───────────────────────────────────────────────────
+function formatDate(d) { if(!d) return '—'; try { return new Date(d).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}); } catch { return d; } }
+function tierColors(t) {
+  return { platinum: { bg:'rgba(107,99,176,0.1)', color:'#6b63b0', border:'rgba(107,99,176,0.25)' },
+           gold:     { bg:'rgba(212,146,10,0.1)',  color:'#b45309', border:'rgba(212,146,10,0.25)' },
+           silver:   { bg:'rgba(100,116,139,0.1)', color:'#475569', border:'rgba(100,116,139,0.25)' } }[t] || {};
+}
+function statusBadge(s) {
+  const m = { pending:'⏳ Pending', accepted:'✅ Accepted', rejected:'❌ Rejected', declined:'❌ Declined', inquired:'🤔 Inquired' };
+  return `<span class="badge badge-${s}">${m[s]||s}</span>`;
+}
+function tierBadge(t) {
+  const m = { platinum:'🥇 Platinum', gold:'🥈 Gold', silver:'🥉 Silver' };
+  const tc = tierColors(t);
+  return `<span style="background:${tc.bg};color:${tc.color};border:1px solid ${tc.border};padding:0.2rem 0.65rem;border-radius:4px;font-size:0.62rem;font-weight:800;letter-spacing:0.08em">${m[t]||t}</span>`;
+}
+
+// ── PAGE NAV ──────────────────────────────────────────────────
+const PAGE_TITLES = {
+  spOverview:'Dashboard', spApply:'Apply to Events', spInvitations:'Invitations',
+  spMySponsorships:'My Sponsorships', spAnalytics:'Analytics', spProfile:'Profile & Logo',
+  spSubscription:'Subscription'
+};
+function showPage(id) {
+  document.querySelectorAll('.dashboard-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link[data-page]').forEach(l => l.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) page.classList.add('active');
+  const link = document.querySelector(`.sidebar-link[data-page="${id}"]`);
+  if (link) link.classList.add('active');
+  document.getElementById('pageTitle').textContent = PAGE_TITLES[id] || id;
+
+  if (id === 'spOverview')       renderOverview();
+  if (id === 'spApply')          renderApplyPage();
+  if (id === 'spInvitations')    renderInvitations();
+  if (id === 'spMySponsorships') renderMySponsorships('all');
+  if (id === 'spAnalytics')      renderAnalytics();
+  if (id === 'spProfile')        renderProfilePage();
+  if (id === 'spSubscription')   renderSubscription();
+}
+document.querySelectorAll('.sidebar-link[data-page]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    showPage(btn.dataset.page);
+    if (window.innerWidth < 768) document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// ── PLAN / SIDEBAR UPDATE ─────────────────────────────────────
+function updatePlanUI() {
+  const plan = getSponsorPlan();
+  const isPremium = plan === 'premium';
+
+  // Top badge
+  const pb = document.getElementById('planBadge');
+  if (pb) { pb.className = `badge badge-${plan}`; pb.textContent = isPremium ? '⭐ Premium' : '🌱 Basic'; }
+
+  // Apply counter
+  const used = getThisMonthApps().length;
+  const max = getMaxApps();
+  const counterEl = document.getElementById('applyCounter');
+  if (counterEl) counterEl.textContent = `${used} / ${max}`;
+
+  // Overview usage
+  const usedEl = document.getElementById('usedApps');
+  const maxEl  = document.getElementById('maxApps');
+  const barEl  = document.getElementById('usageBar');
+  const noteEl = document.getElementById('usageNote');
+  if (usedEl) usedEl.textContent = used;
+  if (maxEl)  maxEl.textContent  = max;
+  if (barEl)  barEl.style.width  = `${Math.min(100, used/max*100)}%`;
+  if (noteEl) noteEl.textContent = `${Math.max(0, max-used)} remaining this month`;
+
+  // Invitation badge
+  const pending = getInvitations().filter(i=>i.status==='pending').length;
+  const badge = document.getElementById('invBadge');
+  if (badge) { badge.textContent = pending; badge.style.display = pending > 0 ? 'inline-flex' : 'none'; }
+}
+
+// ── OVERVIEW ─────────────────────────────────────────────────
+function renderOverview() {
+  const apps   = getApplications();
+  const invs   = getInvitations();
+  const accepted = apps.filter(a=>a.status==='accepted').length;
+  const activeEvents = apps.filter(a=>a.status==='accepted').length;
+  const pendingInv = invs.filter(i=>i.status==='pending').length;
+
+  document.getElementById('statApps').textContent   = apps.length;
+  document.getElementById('statAccepted').textContent = accepted;
+  document.getElementById('statInvites').textContent = pendingInv;
+  document.getElementById('statEvents').textContent  = activeEvents;
+
+  // Recent apps
+  const container = document.getElementById('recentAppsList');
+  const recent = apps.slice().reverse().slice(0,4);
+  if (!recent.length) {
+    container.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--sage);font-size:0.82rem">No applications yet. <button class="btn-ghost btn-sm" onclick="showPage(\'spApply\')">Apply now →</button></div>';
+    return;
+  }
+  container.innerHTML = `<table class="data-table">
+    <thead><tr><th>Event</th><th>Tier</th><th>Amount</th><th>Status</th><th>Applied</th></tr></thead>
+    <tbody>${recent.map(a=>`<tr>
+      <td><span style="margin-right:0.3rem">${a.eventImage||'🎪'}</span><strong>${a.eventName}</strong></td>
+      <td>${tierBadge(a.tier)}</td>
+      <td style="font-weight:700;color:var(--crimson)">₱${(a.amount||0).toLocaleString()}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td style="font-size:0.75rem;color:var(--sage)">${formatDate(a.appliedDate)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+
+  updatePlanUI();
+}
+
+// ── APPLY PAGE ────────────────────────────────────────────────
+function renderApplyPage() {
+  updatePlanUI();
+  const used = getThisMonthApps().length;
+  const max = getMaxApps();
+  const apps = getApplications();
+  const appliedIds = apps.map(a=>a.eventId);
+
+  const container = document.getElementById('eventsForSponsor');
+  const allEvents = PampangaDB.events;
+
+  container.innerHTML = allEvents.map(ev => {
+    const alreadyApplied = appliedIds.includes(ev.id);
+    const atLimit = used >= max;
+    return `<div class="card-box anim d1" style="position:relative">
+      <div style="display:flex;align-items:flex-start;gap:0.875rem;margin-bottom:0.875rem">
+        <div style="font-size:2.2rem;flex-shrink:0">${ev.image}</div>
+        <div style="flex:1">
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.2rem">${ev.name}</div>
+          <div style="font-size:0.72rem;color:var(--sage)">📅 ${formatDate(ev.date)}</div>
+          <div style="font-size:0.72rem;color:var(--sage)">📍 ${ev.location}</div>
+          <div style="font-size:0.72rem;color:var(--sage)">👥 Expected: ${ev.capacity.toLocaleString()} attendees</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+        <span style="background:rgba(212,146,10,0.1);color:var(--gold);border:1px solid rgba(212,146,10,0.2);padding:0.18rem 0.6rem;border-radius:4px;font-size:0.62rem;font-weight:800;text-transform:uppercase">${ev.category}</span>
+      </div>
+      <div style="margin-top:0.875rem;display:flex;gap:0.5rem">
+        ${alreadyApplied
+          ? `<span class="badge badge-pending" style="align-self:center">✓ Applied</span>`
+          : atLimit
+          ? `<button class="btn-ghost btn-sm" style="opacity:0.6;cursor:not-allowed" disabled>Limit Reached</button>`
+          : `<button class="btn-fire btn-sm" onclick="openApplyModal(${ev.id})">📝 Apply →</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openApplyModal(eventId) {
+  const used = getThisMonthApps().length;
+  const max  = getMaxApps();
+  if (used >= max) {
+    if (getSponsorPlan() === 'basic') { openModal('upgradeModal'); }
+    else { showToast('You have reached your monthly limit of 8 applications.','warning'); }
+    return;
+  }
+  const ev = PampangaDB.events.find(e=>e.id===eventId);
+  if (!ev) return;
+  document.getElementById('applyEventId').value = eventId;
+  document.getElementById('applyEventInfo').innerHTML = `
+    <strong>${ev.image} ${ev.name}</strong><br>
+    <span style="color:var(--sage)">📅 ${formatDate(ev.date)} · 📍 ${ev.location} · 👥 ${ev.capacity.toLocaleString()} attendees</span>`;
+  document.getElementById('applyTier').value = 'silver';
+  document.getElementById('applyAmount').value = '';
+  document.getElementById('applyReason').value = '';
+  document.getElementById('applyOffer').value = '';
+  openModal('applyModal');
+}
+
+function submitApplication() {
+  const eventId = parseInt(document.getElementById('applyEventId').value);
+  const tier    = document.getElementById('applyTier').value;
+  const amount  = parseInt(document.getElementById('applyAmount').value);
+  const reason  = document.getElementById('applyReason').value.trim();
+  const offer   = document.getElementById('applyOffer').value.trim();
+
+  if (!amount || amount < 500) { showToast('Please enter a valid amount (min ₱500).','warning'); return; }
+  if (!reason) { showToast('Please explain why you want to sponsor this event.','warning'); return; }
+
+  const ev   = PampangaDB.events.find(e=>e.id===eventId);
+  const apps = getApplications();
+  apps.push({
+    id: nextId(apps), eventId, eventName: ev ? ev.name : '?', eventImage: ev ? ev.image : '🎪',
+    tier, amount, reason, offer, status:'pending',
+    appliedDate: new Date().toISOString(), decisionDate: null
+  });
+  saveApplications(apps);
+  closeModal('applyModal');
+  renderApplyPage();
+  showToast(`Application submitted for ${ev ? ev.name : 'event'}!`, 'success');
+}
+
+// ── INVITATIONS ───────────────────────────────────────────────
+function renderInvitations() {
+  const container = document.getElementById('invitationsSection');
+  const plan = getSponsorPlan();
+
+  if (plan !== 'premium') {
+    container.innerHTML = `<div class="premium-lock">
+      <div style="font-size:3rem;margin-bottom:1rem">🔒</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.5rem">Premium Feature</h3>
+      <p style="font-size:0.85rem;color:var(--sage);margin-bottom:1.5rem;max-width:380px">Upgrade to Premium to receive sponsorship invitations directly from event organizers.</p>
+      <button class="btn-gold" onclick="showPage('spSubscription')">⭐ Upgrade to Premium — ₱599/mo</button>
+    </div>`;
+    return;
+  }
+
+  const invs = getInvitations();
+  if (!invs.length) {
+    container.innerHTML = `<div class="card-box" style="text-align:center;padding:2.5rem">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem">📬</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem">No invitations yet</div>
+      <p style="font-size:0.8rem;color:var(--sage)">Organizers will send you sponsorship invitations here once you have a complete profile.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div style="display:flex;flex-direction:column;gap:1rem">
+    ${invs.slice().reverse().map(inv => renderInvCard(inv)).join('')}
+  </div>`;
+}
+
+function renderInvCard(inv) {
+  const tc = tierColors(inv.tier);
+  const isNew = inv.status === 'pending';
+  return `<div class="inv-card${isNew?' new-inv':''}">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.875rem">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem">
+          ${isNew?'<span style="background:var(--crimson);color:white;font-size:0.55rem;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.08em">NEW</span>':''}
+          <strong style="font-size:1rem">${inv.eventImage||'🎪'} ${inv.eventName}</strong>
+        </div>
+        <div style="font-size:0.72rem;color:var(--sage)">📅 ${formatDate(inv.eventDate)} · 📍 ${inv.eventLocation}</div>
+        <div style="font-size:0.72rem;color:var(--sage)">👥 Expected: ${(inv.expectedAttendees||0).toLocaleString()} attendees</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.35rem">
+        ${statusBadge(inv.status)}
+        ${tierBadge(inv.tier)}
+        <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--crimson)">₱${(inv.suggestedAmount||0).toLocaleString()}</span>
+      </div>
+    </div>
+    <div style="background:rgba(212,146,10,0.05);border-radius:8px;padding:0.75rem;margin-bottom:0.875rem;font-size:0.78rem">
+      <div style="font-weight:700;margin-bottom:0.3rem;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage)">Organizer</div>
+      <div>👤 ${inv.organizerName} · ✉️ ${inv.organizerEmail}</div>
+      ${inv.organizerPhone ? `<div>📞 ${inv.organizerPhone}</div>` : ''}
+      ${inv.requirements ? `<div style="margin-top:0.4rem"><strong>Requirements:</strong> ${inv.requirements}</div>` : ''}
+    </div>
+    ${inv.status==='pending'?`
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+      <button class="btn-success" onclick="acceptInvitation(${inv.id})">✅ Accept</button>
+      <button class="btn-danger"  onclick="openInvResponse(${inv.id},'decline')">❌ Decline</button>
+      <button class="btn-ghost btn-sm" onclick="openInvResponse(${inv.id},'inquire')">🤔 Inquire</button>
+      <button class="btn-ghost btn-sm" onclick="viewInvDetail(${inv.id})" style="margin-left:auto">View Details →</button>
+    </div>`:`
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+      <button class="btn-ghost btn-sm" onclick="viewInvDetail(${inv.id})">View Details →</button>
+    </div>`}
+  </div>`;
+}
+
+function acceptInvitation(id) {
+  const invs = getInvitations();
+  const i = invs.findIndex(v=>v.id===id);
+  if (i!==-1) { invs[i].status='accepted'; invs[i].respondDate=new Date().toISOString(); }
+  saveInvitations(invs);
+  updatePlanUI();
+  renderInvitations();
+  showToast('Invitation accepted! The organizer will be notified.', 'success');
+}
+
+function openInvResponse(id, action) {
+  document.getElementById('invResponseId').value = id;
+  document.getElementById('invResponseAction').value = action;
+  if (action === 'decline') {
+    document.getElementById('invResponseTitle').textContent = '❌ Decline Invitation';
+    document.getElementById('invResponseLabel').textContent = 'Reason for declining';
+    document.getElementById('invResponseText').placeholder = 'Please provide a reason (optional)...';
+  } else {
+    document.getElementById('invResponseTitle').textContent = '🤔 Send Enquiry';
+    document.getElementById('invResponseLabel').textContent = 'Your question or message';
+    document.getElementById('invResponseText').placeholder = 'Ask a question before deciding...';
+  }
+  document.getElementById('invResponseText').value = '';
+  openModal('invResponseModal');
+}
+
+function submitInvResponse() {
+  const id     = parseInt(document.getElementById('invResponseId').value);
+  const action = document.getElementById('invResponseAction').value;
+  const text   = document.getElementById('invResponseText').value.trim();
+  const invs   = getInvitations();
+  const i      = invs.findIndex(v=>v.id===id);
+  if (i !== -1) {
+    invs[i].status = action === 'decline' ? 'declined' : 'inquired';
+    invs[i].respondDate = new Date().toISOString();
+    if (action === 'decline') invs[i].reason = text;
+    if (action === 'inquire') {
+      invs[i].enquiries = invs[i].enquiries || [];
+      invs[i].enquiries.push({ from:'sponsor', message: text || '(no message)', date: new Date().toISOString() });
+    }
+  }
+  saveInvitations(invs);
+  closeModal('invResponseModal');
+  updatePlanUI();
+  renderInvitations();
+  showToast(action === 'decline' ? 'Invitation declined.' : 'Enquiry sent to organizer!', action==='decline'?'info':'success');
+}
+
+function viewInvDetail(id) {
+  const inv = getInvitations().find(v=>v.id===id);
+  if (!inv) return;
+  const tc = tierColors(inv.tier);
+  document.getElementById('invDetailContent').innerHTML = `
+    <div style="display:grid;gap:0.875rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem">
+        <div>
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Event</div>
+          <div style="font-weight:700">${inv.eventImage} ${inv.eventName}</div>
+          <div style="font-size:0.75rem;color:var(--sage)">📅 ${formatDate(inv.eventDate)}</div>
+          <div style="font-size:0.75rem;color:var(--sage)">📍 ${inv.eventLocation}</div>
+          <div style="font-size:0.75rem;color:var(--sage)">👥 ${(inv.expectedAttendees||0).toLocaleString()} expected attendees</div>
+        </div>
+        <div>
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Organizer</div>
+          <div style="font-weight:700">${inv.organizerName}</div>
+          <div style="font-size:0.75rem;color:var(--sage)">✉️ ${inv.organizerEmail}</div>
+          ${inv.organizerPhone ? `<div style="font-size:0.75rem;color:var(--sage)">📞 ${inv.organizerPhone}</div>` : ''}
+        </div>
+      </div>
+      <div style="background:rgba(212,146,10,0.06);border-radius:10px;padding:0.875rem">
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.35rem">Sponsorship Level Requested</div>
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          ${tierBadge(inv.tier)}
+          <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--crimson)">₱${(inv.suggestedAmount||0).toLocaleString()}</span>
+        </div>
+      </div>
+      ${inv.requirements ? `<div>
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Special Requirements</div>
+        <p style="font-size:0.82rem;color:var(--charcoal);line-height:1.6">${inv.requirements}</p>
+      </div>` : ''}
+      ${inv.enquiries && inv.enquiries.length ? `<div>
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem">Enquiry Thread</div>
+        ${inv.enquiries.map(q=>`<div style="background:${q.from==='sponsor'?'rgba(212,146,10,0.07)':'rgba(27,58,45,0.07)'};border-radius:8px;padding:0.65rem 0.875rem;margin-bottom:0.4rem;font-size:0.78rem">
+          <strong>${q.from==='sponsor'?'You':'Organizer'}:</strong> ${q.message}
+          <div style="font-size:0.65rem;color:var(--sage);margin-top:0.2rem">${formatDate(q.date)}</div>
+        </div>`).join('')}
+      </div>` : ''}
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap"><span style="font-size:0.75rem;color:var(--sage)">Status: </span>${statusBadge(inv.status)}</div>
+    </div>`;
+  document.getElementById('invDetailActions').innerHTML = inv.status==='pending' ? `
+    <button class="btn-success" style="flex:1;justify-content:center" onclick="acceptInvitation(${inv.id});closeModal('invDetailModal')">✅ Accept</button>
+    <button class="btn-danger"  style="flex:1;justify-content:center" onclick="closeModal('invDetailModal');openInvResponse(${inv.id},'decline')">❌ Decline</button>
+    <button class="btn-ghost btn-sm" onclick="closeModal('invDetailModal');openInvResponse(${inv.id},'inquire')">🤔 Inquire</button>` :
+    `<div style="font-size:0.82rem;color:var(--sage)">This invitation has been <strong>${inv.status}</strong>.</div>`;
+  openModal('invDetailModal');
+}
+
+// ── MY SPONSORSHIPS ───────────────────────────────────────────
+function filterMySponsorships(status, btn) {
+  document.querySelectorAll('#mySponsFilterTabs .filter-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderMySponsorships(status);
+}
+
+function renderMySponsorships(filterStatus) {
+  let apps = getApplications();
+  if (filterStatus && filterStatus !== 'all') apps = apps.filter(a=>a.status===filterStatus);
+  const tbody = document.getElementById('mySponsTableBody');
+  if (!apps.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--sage)">No applications ${filterStatus!=='all'?'with this status ':' '}yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = apps.slice().reverse().map(a=>`<tr>
+    <td><span style="margin-right:0.3rem">${a.eventImage||'🎪'}</span><strong>${a.eventName}</strong></td>
+    <td>${tierBadge(a.tier)}</td>
+    <td style="font-weight:700;color:var(--crimson)">₱${(a.amount||0).toLocaleString()}</td>
+    <td>${statusBadge(a.status)}</td>
+    <td style="font-size:0.75rem;color:var(--sage)">${formatDate(a.appliedDate)}</td>
+    <td style="font-size:0.75rem;color:var(--sage)">${a.decisionDate ? formatDate(a.decisionDate) : '—'}</td>
+  </tr>`).join('');
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────────
+function renderAnalytics() {
+  const container = document.getElementById('analyticsSection');
+  const plan = getSponsorPlan();
+
+  if (plan !== 'premium') {
+    container.innerHTML = `<div class="premium-lock">
+      <div style="font-size:3rem;margin-bottom:1rem">🔒</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.5rem">Premium Feature</h3>
+      <p style="font-size:0.85rem;color:var(--sage);margin-bottom:1.5rem;max-width:380px">Upgrade to Premium to access detailed sponsorship performance analytics and ROI tracking.</p>
+      <button class="btn-gold" onclick="showPage('spSubscription')">⭐ Upgrade to Premium — ₱599/mo</button>
+    </div>`;
+    return;
+  }
+
+  const apps = getApplications().filter(a=>a.status==='accepted');
+  const totalInvestment = apps.reduce((s,a)=>s+(a.amount||0),0);
+  const totalReach = apps.reduce((s,a)=>{
+    const ev = PampangaDB.events.find(e=>e.id===a.eventId);
+    return s + (ev ? ev.capacity : 0);
+  },0);
+
+  container.innerHTML = `
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.75rem">
+    <div class="stat-card"><div class="stat-icon gold">🎪</div><div><div class="stat-num">${apps.length}</div><div class="stat-label">Events Sponsored</div></div></div>
+    <div class="stat-card"><div class="stat-icon eco">👥</div><div><div class="stat-num">${totalReach.toLocaleString()}</div><div class="stat-label">Attendees Reached</div></div></div>
+    <div class="stat-card"><div class="stat-icon fire">💰</div><div><div class="stat-num">₱${totalInvestment.toLocaleString()}</div><div class="stat-label">Total Investment</div></div></div>
+    <div class="stat-card"><div class="stat-icon blue">📊</div><div><div class="stat-num">${apps.length > 0 ? Math.round(totalReach/apps.length).toLocaleString() : 0}</div><div class="stat-label">Avg. Reach/Event</div></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.4rem">
+    <div class="card-box">
+      <h3 class="card-title-sm">📈 Sponsorship Performance</h3>
+      ${apps.length === 0 ? '<p style="font-size:0.8rem;color:var(--sage)">No accepted sponsorships yet.</p>' :
+        apps.map(a => {
+          const ev = PampangaDB.events.find(e=>e.id===a.eventId);
+          const reach = ev ? ev.capacity : 0;
+          const roi   = reach > 0 ? ((reach * 0.002) / (a.amount||1) * 100).toFixed(1) : 0;
+          return `<div style="margin-bottom:0.875rem">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.3rem">
+              <span><strong>${a.eventImage} ${a.eventName}</strong></span>
+              <span style="color:var(--sage)">ROI est. ${roi}%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--sage);margin-bottom:0.4rem">
+              <span>₱${(a.amount||0).toLocaleString()} invested</span>
+              <span>${reach.toLocaleString()} reach</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill gold" style="width:${Math.min(100,parseFloat(roi)*5)}%"></div></div>
+          </div>`;
+        }).join('')}
+    </div>
+    <div class="card-box">
+      <h3 class="card-title-sm">🎯 Brand Visibility Estimates</h3>
+      ${apps.length === 0 ? '<p style="font-size:0.8rem;color:var(--sage)">Accepted sponsorships will show visibility metrics here.</p>' : `
+        <div style="display:grid;gap:0.6rem">
+          <div style="display:flex;justify-content:space-between;padding:0.6rem;background:rgba(212,146,10,0.05);border-radius:8px;font-size:0.82rem">
+            <span>🖼️ Logo impressions</span><strong>${(totalReach * 3).toLocaleString()}+</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.6rem;background:rgba(212,146,10,0.05);border-radius:8px;font-size:0.82rem">
+            <span>🌐 Website clicks (est.)</span><strong>${Math.round(totalReach * 0.05).toLocaleString()}</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.6rem;background:rgba(212,146,10,0.05);border-radius:8px;font-size:0.82rem">
+            <span>📱 Social mentions (est.)</span><strong>${Math.round(totalReach * 0.002).toLocaleString()}</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.6rem;background:rgba(212,146,10,0.05);border-radius:8px;font-size:0.82rem">
+            <span>🏆 Overall visibility score</span><strong style="color:var(--crimson)">${Math.min(99, 60 + apps.length * 8)}/100</strong>
+          </div>
+        </div>`}
+    </div>
+  </div>
+  <div class="card-box">
+    <h3 class="card-title-sm">📋 Sponsorship History</h3>
+    <table class="data-table">
+      <thead><tr><th>Event</th><th>Date</th><th>Tier</th><th>Investment</th><th>Est. Reach</th><th>Status</th></tr></thead>
+      <tbody>${getApplications().slice().reverse().map(a => {
+        const ev = PampangaDB.events.find(e=>e.id===a.eventId);
+        return `<tr>
+          <td><span style="margin-right:0.3rem">${a.eventImage||'🎪'}</span><strong>${a.eventName}</strong></td>
+          <td style="font-size:0.75rem;color:var(--sage)">${ev ? formatDate(ev.date) : '—'}</td>
+          <td>${tierBadge(a.tier)}</td>
+          <td style="font-weight:700;color:var(--crimson)">₱${(a.amount||0).toLocaleString()}</td>
+          <td style="font-size:0.75rem;color:var(--sage)">${ev ? ev.capacity.toLocaleString() : '—'}</td>
+          <td>${statusBadge(a.status)}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// ── PROFILE PAGE ──────────────────────────────────────────────
+function renderProfilePage() {
+  const prof = getProfile();
+  const plan = getSponsorPlan();
+  const isPremium = plan === 'premium';
+
+  if (prof.company)   document.getElementById('profileCompany').value  = prof.company;
+  if (prof.industry)  document.getElementById('profileIndustry').value  = prof.industry;
+  if (prof.contact)   document.getElementById('profileContact').value   = prof.contact;
+  if (prof.email)     document.getElementById('profileEmail').value     = prof.email;
+  if (prof.phone)     document.getElementById('profilePhone').value     = prof.phone;
+  if (prof.website)   document.getElementById('profileWebsite').value   = prof.website;
+  if (prof.desc)      document.getElementById('profileDesc').value      = prof.desc;
+  if (prof.bio)       document.getElementById('profileBio').value       = prof.bio;
+  if (prof.facebook)  document.getElementById('profileFacebook').value  = prof.facebook;
+  if (prof.instagram) document.getElementById('profileInstagram').value = prof.instagram;
+  if (prof.twitter)   document.getElementById('profileTwitter').value   = prof.twitter;
+
+  // Premium extras
+  const extras = document.getElementById('premiumProfileExtras');
+  if (extras) extras.style.display = isPremium ? 'block' : 'none';
+
+  // Logo section
+  const logoSection = document.getElementById('logoSection');
+  const logoSize = isPremium ? '150×150px (Premium)' : '50×50px (Basic)';
+  const logoPreview = prof.logoUrl
+    ? `<img src="${prof.logoUrl}" alt="Logo" style="width:${isPremium?'120px':'60px'};height:${isPremium?'120px':'60px'};object-fit:contain;border-radius:8px;border:1px solid rgba(212,146,10,0.2)">`
+    : `<div style="width:${isPremium?'120px':'60px'};height:${isPremium?'120px':'60px'};background:rgba(212,146,10,0.08);border:2px dashed rgba(212,146,10,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:${isPremium?'2rem':'1.2rem'}">🏢</div>`;
+  logoSection.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem">
+      ${logoPreview}
+      <div>
+        <div style="font-size:0.72rem;font-weight:700;color:var(--sage);margin-bottom:0.3rem">Recommended: ${logoSize}</div>
+        <div style="font-size:0.72rem;color:var(--sage);margin-bottom:0.5rem">Formats: PNG, JPG, SVG</div>
+        ${isPremium?'<div class="badge badge-premium" style="margin-bottom:0.5rem">⭐ Premium: Large Logo</div>':''}
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Logo URL</label>
+      <input type="url" class="form-input" id="profileLogo" value="${prof.logoUrl||''}" placeholder="https://your-cdn.com/logo.png">
+    </div>
+    <button class="btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="saveProfile()">💾 Save Logo</button>`;
+}
+
+function saveProfile() {
+  const prof = {
+    company:   (document.getElementById('profileCompany')?.value || '').trim(),
+    industry:  document.getElementById('profileIndustry')?.value || '',
+    contact:   (document.getElementById('profileContact')?.value || '').trim(),
+    email:     (document.getElementById('profileEmail')?.value || '').trim(),
+    phone:     (document.getElementById('profilePhone')?.value || '').trim(),
+    website:   (document.getElementById('profileWebsite')?.value || '').trim(),
+    desc:      (document.getElementById('profileDesc')?.value || '').trim(),
+    bio:       (document.getElementById('profileBio')?.value || '').trim(),
+    facebook:  (document.getElementById('profileFacebook')?.value || '').trim(),
+    instagram: (document.getElementById('profileInstagram')?.value || '').trim(),
+    twitter:   (document.getElementById('profileTwitter')?.value || '').trim(),
+    logoUrl:   (document.getElementById('profileLogo')?.value || '').trim()
+  };
+  saveProfileData(prof);
+  updateSidebarProfile(prof);
+  showToast('Profile saved!', 'success');
+}
+
+function updateSidebarProfile(prof) {
+  if (prof.company) {
+    document.getElementById('sidebarName').textContent = prof.company;
+    document.getElementById('sidebarAvatar').textContent = prof.company.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  }
+  if (prof.email) document.getElementById('sidebarEmail').textContent = prof.email;
+}
+
+// ── SUBSCRIPTION ──────────────────────────────────────────────
+function renderSubscription() {
+  const plan = getSponsorPlan();
+  const isPremium = plan === 'premium';
+
+  document.getElementById('curPlanIcon').textContent = isPremium ? '⭐' : '🌱';
+  document.getElementById('curPlanName').textContent = isPremium ? 'Premium Plan — ₱599/month' : 'Basic Plan — ₱299/month';
+  document.getElementById('curPlanBadge').className = `badge badge-${plan}`;
+  document.getElementById('curPlanBadge').textContent = 'Active';
+
+  document.getElementById('basicCurrentBadge').style.display   = !isPremium ? 'inline-flex' : 'none';
+  document.getElementById('premiumCurrentBadge').style.display =  isPremium ? 'inline-flex' : 'none';
+
+  document.getElementById('basicBtn').textContent    = !isPremium ? 'Current Plan' : 'Downgrade to Basic';
+  document.getElementById('premiumBtn').textContent  =  isPremium ? 'Current Plan' : '⭐ Upgrade to Premium';
+  document.getElementById('premiumBtn').className    =  isPremium ? 'btn-ghost' : 'btn-gold';
+  document.getElementById('premiumBtn').style.width  = '100%';
+  document.getElementById('premiumBtn').style.justifyContent = 'center';
+
+  document.getElementById('basicBtn').disabled   =  !isPremium;
+  document.getElementById('premiumBtn').disabled =   isPremium;
+}
+
+function selectPlan(plan) {
+  const current = getSponsorPlan();
+  if (plan === current) { showToast(`You are already on the ${plan} plan.`, 'info'); return; }
+  const msg = plan === 'premium'
+    ? 'Upgrade to Premium for ₱599/month?\n\nYou will get: 8 events/month, sponsorship invitations, large logos, and analytics.'
+    : 'Downgrade to Basic for ₱299/month?\n\nYou will lose: invitations, analytics, and large logo features.';
+  if (!confirm(msg)) return;
+  saveSponsorPlan(plan);
+  closeModal('upgradeModal');
+  renderSubscription();
+  updatePlanUI();
+  showToast(`Switched to ${plan.charAt(0).toUpperCase()+plan.slice(1)} plan!`, 'success');
+  renderProfilePage();
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  seedData();
+  const prof = getProfile();
+  updateSidebarProfile(prof);
+  updatePlanUI();
+  showPage('spOverview');
+});
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.showPage = showPage;
+window.selectPlan = selectPlan;
+window.openApplyModal = openApplyModal;
+window.submitApplication = submitApplication;
+window.acceptInvitation = acceptInvitation;
+window.o
+</script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Accommodation Matching | Pampanga Events</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Instrument+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson:   #C41E3A; --ember: #D4460A; --gold: #D4920A; --amber: #F0B429;
+  --forest:    #1B3A2D; --moss:  #2D5A3D; --sage: #4A7C5F;  --fern: #6B9E7A;
+  --ink:       #120808; --charcoal: #2A1515; --parchment: #FBF4E8;
+  --cream:     #FFF8EF; --bone: #F5EDD8;
+  --g-fire:    linear-gradient(135deg, #8B0000 0%, #C41E3A 40%, #D4920A 100%);
+  --g-eco:     linear-gradient(135deg, #1B3A2D 0%, #2D5A3D 60%, #4A7C5F 100%);
+  --g-dusk:    linear-gradient(180deg, #120808 0%, #2A1515 50%, #1B3A2D 100%);
+  --g-gold:    linear-gradient(135deg, #b45309 0%, #D4920A 50%, #F0B429 100%);
+  --shadow-card: 0 2px 16px rgba(18,8,8,0.1), 0 1px 4px rgba(18,8,8,0.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Instrument Sans', sans-serif; background: var(--bone); color: var(--ink); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+/* ── NAVBAR ── */
+.navbar { background: rgba(18,8,8,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212,146,10,0.18); position: sticky; top: 0; z-index: 100; height: 62px; display: flex; align-items: center; padding: 0 2rem; gap: 1.5rem; }
+.nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-family: 'Cinzel Decorative', serif; font-size: 1rem; font-weight: 700; background: var(--g-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.nav-back { color: rgba(200,221,208,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; margin-left: auto; display: flex; align-items: center; gap: 0.35rem; }
+.nav-back:hover { color: var(--amber); }
+
+/* ── LAYOUT ── */
+.page-hero { background: var(--g-dusk); padding: 2.5rem 2rem 2rem; }
+.page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+/* ── CARDS ── */
+.card-box { background: white; border-radius: 14px; padding: 1.5rem; border: 1px solid rgba(212,146,10,0.1); box-shadow: var(--shadow-card); }
+.hotel-card { background: white; border-radius: 16px; border: 1px solid rgba(212,146,10,0.12); overflow: hidden; transition: all 0.3s; }
+.hotel-card:hover { border-color: rgba(212,146,10,0.3); box-shadow: 0 8px 32px rgba(18,8,8,0.1); transform: translateY(-2px); }
+.hotel-card.excellent { border-left: 4px solid #16a34a; }
+.hotel-card.good      { border-left: 4px solid var(--gold); }
+.hotel-card.fair      { border-left: 4px solid var(--amber); }
+
+/* ── SCORE RING ── */
+.score-ring { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 3px solid; flex-shrink: 0; }
+.score-ring.excellent { border-color: #16a34a; background: rgba(22,163,74,0.08); }
+.score-ring.good      { border-color: var(--gold); background: rgba(212,146,10,0.08); }
+.score-ring.fair      { border-color: var(--amber); background: rgba(240,180,41,0.08); }
+.score-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; line-height: 1; }
+.score-label { font-size: 0.5rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── BUTTONS ── */
+.btn-fire { background: var(--g-fire); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 16px rgba(196,30,58,0.3); }
+.btn-fire:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,30,58,0.5); }
+.btn-eco { background: var(--g-eco); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid rgba(212,146,10,0.25); padding: 0.65rem 1.4rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-ghost:hover { border-color: var(--ember); color: var(--ember); }
+.btn-sm { padding: 0.4rem 0.9rem; font-size: 0.7rem; }
+
+/* ── FILTER TABS ── */
+.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.filter-tab { padding: 0.42rem 1rem; border: 1.5px solid rgba(212,146,10,0.18); border-radius: 6px; background: white; color: var(--sage); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; cursor: pointer; transition: all 0.2s; font-family: 'Instrument Sans', sans-serif; text-transform: uppercase; }
+.filter-tab:hover, .filter-tab.active { border-color: var(--crimson); background: var(--crimson); color: white; }
+.filter-tab.eco.active { border-color: var(--moss); background: var(--moss); }
+.filter-tab.gold.active { border-color: var(--gold); background: var(--g-gold); }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(18,8,8,0.78); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; visibility: hidden; transition: all 0.3s; }
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal { background: var(--cream); border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 2.25rem; transform: scale(0.9) translateY(20px); transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 40px 80px rgba(18,8,8,0.35); border: 1px solid rgba(212,146,10,0.18); }
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1.5px solid rgba(212,146,10,0.12); }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; }
+.modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(18,8,8,0.07); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; transition: all 0.2s; }
+.modal-close:hover { background: rgba(196,30,58,0.1); color: var(--crimson); }
+
+/* ── STARS ── */
+.stars { color: var(--amber); letter-spacing: 1px; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 1.75rem; right: 1.75rem; background: var(--ink); color: var(--bone); padding: 0.875rem 1.3rem; border-radius: 10px; box-shadow: 0 10px 40px rgba(18,8,8,0.35); z-index: 9999; display: flex; align-items: center; gap: 0.65rem; transform: translateY(80px); opacity: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); border-left: 3px solid var(--gold); max-width: 330px; font-size: 0.82rem; font-weight: 600; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left-color: var(--moss); }
+.toast.info    { border-left-color: #3b82f6; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.anim { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
+.anim:nth-child(1){animation-delay:0.05s}.anim:nth-child(2){animation-delay:0.12s}
+.anim:nth-child(3){animation-delay:0.19s}.anim:nth-child(4){animation-delay:0.26s}
+.anim:nth-child(5){animation-delay:0.33s}
+
+/* AI pulse animation */
+@keyframes aiPulse { 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.4)} 50%{box-shadow:0 0 0 12px rgba(37,99,235,0)} }
+.ai-pulse { animation: aiPulse 2s ease-in-out infinite; }
+
+@media(max-width:768px){
+  .page-container { padding: 1rem; }
+  .hotel-card-body { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28"><ellipse cx="14" cy="14" rx="8" ry="11" fill="none" stroke="#C41E3A" stroke-width="1.6"/><rect x="11" y="4" width="6" height="3" rx="1" fill="#D4920A"/><line x1="14" y1="25" x2="14" y2="28" stroke="#D4920A" stroke-width="1.2"/></svg>
+    CONFEST
+  </a>
+  <div style="display:flex;align-items:center;gap:0.875rem;color:rgba(200,221,208,0.6);font-size:0.78rem;font-weight:700;letter-spacing:0.06em">
+    <span style="color:rgba(200,221,208,0.3)">/</span>
+    <span style="color:#3b82f6">🤖 AI Accommodation Matching</span>
+  </div>
+  <a href="../dashboard/organizer-dashboard.html" class="nav-back">← Organizer Dashboard</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="page-hero">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:0.75rem">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;ai-pulse" class="ai-pulse">🤖</div>
+          <div>
+            <h1 style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;color:white;line-height:1.1">AI Accommodation Matching</h1>
+            <p style="color:rgba(200,221,208,0.5);font-size:0.78rem;margin-top:0.2rem">Smart hotel recommendations for your events</p>
+          </div>
+        </div>
+        <p style="color:rgba(200,221,208,0.6);font-size:0.82rem;max-width:520px;line-height:1.6">Our AI engine automatically matches nearby hotels to your events based on distance, capacity, dates, and amenities — making it easy for attendees to find accommodation.</p>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+        <button class="btn-fire" onclick="runAIMatching()">🤖 Run AI Matching</button>
+        <button class="btn-ghost" style="color:rgba(200,221,208,0.7);border-color:rgba(200,221,208,0.2)" onclick="exportRecommendations()">📤 Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="page-container">
+
+  <!-- Event Selector -->
+  <div class="card-box" style="margin-bottom:1.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1rem">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700">🎪 Select Event for Analysis</h2>
+    </div>
+    <div style="display:flex;gap:0.875rem;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:220px">
+        <label style="display:block;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);margin-bottom:0.4rem">Choose Event</label>
+        <select id="eventSelector" style="width:100%;padding:0.7rem 0.95rem;border:1.5px solid rgba(212,146,10,0.2);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.88rem;background:white;outline:none" onchange="onEventChange()">
+          <option value="">— Select an event —</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:160px">
+        <label style="display:block;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);margin-bottom:0.4rem">Search Radius</label>
+        <select id="radiusSelector" style="width:100%;padding:0.7rem 0.95rem;border:1.5px solid rgba(212,146,10,0.2);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.88rem;background:white;outline:none" onchange="rerunFilter()">
+          <option value="15">Within 15 km</option>
+          <option value="10">Within 10 km</option>
+          <option value="5">Within 5 km</option>
+        </select>
+      </div>
+      <button class="btn-fire" onclick="runAIMatching()" style="height:42px;align-self:flex-end">🤖 Match Hotels</button>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div id="statsRow" style="display:none;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.5rem">
+    <div class="card-box" style="display:flex;align-items:center;gap:0.75rem">
+      <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🏨</div>
+      <div><div id="statHotels" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1">0</div><div style="font-size:0.65rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--sage)">Hotels Matched</div></div>
+    </div>
+    <div class="card-box" style="display:flex;align-items:center;gap:0.75rem">
+      <div style="width:42px;height:42px;border-radius:10px;background:rgba(22,163,74,0.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🛏️</div>
+      <div><div id="statRooms" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1">0</div><div style="font-size:0.65rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--sage)">Total Rooms</div></div>
+    </div>
+    <div class="card-box" style="display:flex;align-items:center;gap:0.75rem">
+      <div style="width:42px;height:42px;border-radius:10px;background:rgba(212,146,10,0.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">✅</div>
+      <div><div id="statAvailable" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1">0</div><div style="font-size:0.65rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--sage)">Available Rooms</div></div>
+    </div>
+    <div class="card-box" style="display:flex;align-items:center;gap:0.75rem">
+      <div style="width:42px;height:42px;border-radius:10px;background:rgba(196,30,58,0.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">📊</div>
+      <div><div id="statCoverage" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1">0%</div><div style="font-size:0.65rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--sage)">Coverage</div></div>
+    </div>
+  </div>
+
+  <!-- Filter Row -->
+  <div id="filterRow" style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.875rem;margin-bottom:1.25rem">
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setHotelFilter('all',this)">All Hotels</button>
+      <button class="filter-tab gold active" style="display:none" onclick="setHotelFilter('excellent',this)" id="tabExcellent">🟢 Excellent</button>
+      <button class="filter-tab" onclick="setHotelFilter('good',this)">🟡 Good</button>
+      <button class="filter-tab" onclick="setHotelFilter('fair',this)">🟠 Fair</button>
+    </div>
+    <div style="font-size:0.75rem;color:var(--sage)" id="filterStatus">Showing all matched hotels</div>
+  </div>
+
+  <!-- Results -->
+  <div id="matchResults">
+    <!-- Initial state -->
+    <div id="emptyState" style="text-align:center;padding:4rem 1rem">
+      <div style="font-size:4rem;margin-bottom:1rem">🤖</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.6rem;color:var(--ink)">Select an Event to Begin</h3>
+      <p style="font-size:0.85rem;color:var(--sage);max-width:400px;margin:0 auto 1.5rem">Choose an event above and click "Match Hotels" to see AI-powered accommodation recommendations based on proximity, capacity, and availability.</p>
+      <button class="btn-eco" onclick="document.getElementById('eventSelector').focus()">🎪 Choose Event →</button>
+    </div>
+    <div id="hotelsGrid" style="display:none;flex-direction:column;gap:1.1rem"></div>
+    <div id="analysisPanel" style="display:none;margin-top:1.5rem"></div>
+  </div>
+
+</div>
+
+<!-- ── HOTEL DETAIL MODAL ── -->
+<div class="modal-overlay" id="hotelModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="hotelModalTitle">Hotel Details</h2>
+      <button class="modal-close" onclick="closeModal('hotelModal')">✕</button>
+    </div>
+    <div id="hotelModalContent"></div>
+  </div>
+</div>
+
+<!-- ── SCRIPT ── -->
+<script>
+const Storage = {
+  get:  (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set:  (k, v) => localStorage.setItem(k, JSON.stringify(v))
+};
+
+// ── DATABASE ─────────────────────────────────────────────────
+const events = [
+  { id:1, name:"Ligligan Parul Sampernandu", date:"2025-12-17", location:"Bacolor, Pampanga",        lat:14.975, lng:120.573, image:"🏮", capacity:5000,  type:"festival" },
+  { id:2, name:"Sisig Food Festival",        date:"2025-10-20", location:"Pampanga Capitol Grounds", lat:15.029, lng:120.692, image:"🍽️", capacity:3000, type:"food" },
+  { id:3, name:"Apung Iru Fluvial Parade",   date:"2025-06-23", location:"Candaba River, Pampanga",  lat:15.095, lng:120.825, image:"⛵", capacity:10000, type:"cultural" },
+  { id:4, name:"Pampanga Summer Concert",    date:"2025-04-15", location:"SM City Pampanga",         lat:15.047, lng:120.692, image:"🎵", capacity:8000,  type:"concert" },
+  { id:5, name:"Kulinarya Pampanga Festival",date:"2025-08-10", location:"Angeles City Convention",  lat:15.135, lng:120.600, image:"👨‍🍳",capacity:2000,  type:"food" },
+  { id:6, name:"Sinukwan Folk Arts Festival",date:"2025-09-05", location:"San Fernando Heritage Park",lat:15.029,lng:120.680,image:"🎭", capacity:1500,  type:"cultural" }
+];
+
+const hotels = [
+  { id:1,  name:"Marquee Mall Hotel",       lat:15.035, lng:120.696, stars:4, capacity:450, priceMin:3500, priceMax:6000,  contact:"045-123-4567", website:"https://marqueehotel.ph",  amenities:["WiFi","Parking","Pool","Gym","Restaurant","Conference Room","Spa"], description:"Luxury hotel adjacent to Marquee Mall, ideal for premium event attendees.", imgEmoji:"🏨" },
+  { id:2,  name:"Hotel Stotsenberg",        lat:15.135, lng:120.598, stars:4, capacity:200, priceMin:2500, priceMax:4000,  contact:"045-234-5678", website:"https://stotsenberg.com",  amenities:["WiFi","Parking","Pool","Restaurant","Meeting Rooms"],             description:"Premier hotel in Clark, perfect for international guests.", imgEmoji:"🏩" },
+  { id:3,  name:"Pampanga Suites",          lat:15.040, lng:120.700, stars:3, capacity:120, priceMin:1500, priceMax:2800,  contact:"045-345-6789", website:"https://pamsuites.ph",      amenities:["WiFi","Parking","Restaurant","Laundry"],                          description:"Comfortable mid-range hotel with easy highway access.", imgEmoji:"🏩" },
+  { id:4,  name:"Subic Bay Travelers Inn",  lat:14.900, lng:120.269, stars:3, capacity:80,  priceMin:800,  priceMax:1500,  contact:"047-456-7890", website:"https://subtravinn.ph",    amenities:["WiFi","Parking","Breakfast"],                                     description:"Budget-friendly hotel popular with backpackers.", imgEmoji:"🛎️" },
+  { id:5,  name:"Quest Hotel Clark",        lat:15.180, lng:120.534, stars:4, capacity:300, priceMin:3000, priceMax:5500,  contact:"045-567-8901", website:"https://questhotelclark.com",amenities:["WiFi","Parking","Pool","Gym","Restaurant","Conference Room"],    description:"Full-service business hotel in Clark Freeport Zone.", imgEmoji:"🏨" },
+  { id:6,  name:"Oasis Hotel",             lat:15.025, lng:120.688, stars:3, capacity:160, priceMin:1200, priceMax:2200,  contact:"045-678-9012", website:"https://oasispampanga.ph", amenities:["WiFi","Parking","Restaurant","Bar","Terrace"],                     description:"Relaxing hotel with great views in San Fernando.", imgEmoji:"🌴" },
+  { id:7,  name:"Angeles Grand Suites",     lat:15.148, lng:120.590, stars:4, capacity:220, priceMin:2800, priceMax:4500,  contact:"045-789-0123", website:"https://angelesgrand.com", amenities:["WiFi","Parking","Pool","Gym","Restaurant","Airport Shuttle"],      description:"Upscale hotel near Clark International Airport.", imgEmoji:"✈️" },
+  { id:8,  name:"Midas Hotel Capas",        lat:15.335, lng:120.592, stars:2, capacity:60,  priceMin:600,  priceMax:1100,  contact:"045-890-1234", website:"#",                        amenities:["WiFi","Parking","Breakfast"],                                     description:"Simple, clean budget hotel in Capas.", imgEmoji:"🛏️" },
+  { id:9,  name:"The Clarkton Hotel",       lat:15.186, lng:120.545, stars:4, capacity:180, priceMin:2200, priceMax:3800,  contact:"045-901-2345", website:"https://clarktonhotel.com", amenities:["WiFi","Parking","Pool","Restaurant","Business Center"],            description:"Modern business hotel with Clark Freeport location.", imgEmoji:"🏨" },
+  { id:10, name:"Premiere Hotel Angeles",   lat:15.142, lng:120.594, stars:3, capacity:95,  priceMin:1100, priceMax:1900,  contact:"045-012-3456", website:"https://premiereangeles.ph",amenities:["WiFi","Parking","Restaurant"],                                    description:"Affordable hotel in Angeles City center.", imgEmoji:"🏩" },
+  { id:11, name:"Hann Casino Resort",       lat:15.183, lng:120.537, stars:5, capacity:600, priceMin:5000, priceMax:12000, contact:"045-888-8888", website:"https://hanncasino.com",   amenities:["WiFi","Parking","Pool","Casino","Gym","Spa","Multiple Restaurants","Conference Center"],description:"Luxury integrated resort in Clark.", imgEmoji:"🎰" },
+  { id:12, name:"Micros Hotel Pampanga",    lat:15.062, lng:120.697, stars:3, capacity:75,  priceMin:900,  priceMax:1600,  contact:"045-111-2222", website:"#",                        amenities:["WiFi","Parking","Breakfast","Meeting Room"],                     description:"Small business hotel convenient to the expressway.", imgEmoji:"🛎️" }
+];
+
+// ── AI MATCHING ALGORITHM ─────────────────────────────────────
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return s[(v-20)%10] || s[v] || s[0];
+}
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLng = (lng2-lng1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function distanceScore(km) {
+  if (km <= 2)  return 100;
+  if (km <= 5)  return 85;
+  if (km <= 10) return 65;
+  if (km <= 15) return 40;
+  return 0;
+}
+
+function capacityScore(hotelCapacity, eventCapacity) {
+  const ratio = hotelCapacity / (eventCapacity * 0.1);
+  if (ratio >= 2)   return 100;
+  if (ratio >= 1)   return 80;
+  if (ratio >= 0.5) return 55;
+  return 30;
+}
+
+function eventTypeScore(hotel, eventType) {
+  const scores = {
+    festival:  { 4:95, 5:100, 3:75, 2:50 },
+    food:      { 4:90, 5:85,  3:85, 2:70 },
+    cultural:  { 4:90, 5:95,  3:80, 2:65 },
+    concert:   { 4:85, 5:100, 3:75, 2:55 },
+    corporate: { 4:95, 5:100, 3:70, 2:40 }
+  };
+  return (scores[eventType] || scores.festival)[hotel.stars] || 60;
+}
+
+function amenityScore(hotel, eventType) {
+  const needed = { festival:['WiFi','Parking'], food:['WiFi','Restaurant'], cultural:['WiFi','Parking'], concert:['WiFi','Parking','Gym'], corporate:['WiFi','Conference Room','Business Center'] };
+  const wants = needed[eventType] || needed.festival;
+  const matches = wants.filter(a => hotel.amenities.includes(a)).length;
+  return Math.round((matches / wants.length) * 100);
+}
+
+function getMatchReasons(hotel, event, km) {
+  const reasons = [];
+  if (km <= 3)  reasons.push(`Only ${km.toFixed(1)}km from event — walking distance`);
+  else if (km <= 7) reasons.push(`${km.toFixed(1)}km from event — short drive`);
+  else          reasons.push(`${km.toFixed(1)}km from event — accessible by transport`);
+  if (hotel.capacity >= 200) reasons.push(`${hotel.capacity} rooms — great for large groups`);
+  else reasons.push(`${hotel.capacity} rooms available`);
+  if (hotel.amenities.includes('Pool'))    reasons.push('Pool & leisure facilities');
+  if (hotel.amenities.includes('Conference Room') || hotel.amenities.includes('Conference Center')) reasons.push('Conference & meeting facilities');
+  if (hotel.amenities.includes('Parking')) reasons.push('Free parking on-site');
+  if (hotel.amenities.includes('Restaurant')) reasons.push('On-site restaurant');
+  if (hotel.amenities.includes('Airport Shuttle') || hotel.amenities.includes('Spa')) reasons.push('Premium amenities included');
+  if (hotel.stars >= 4) reasons.push(`${hotel.stars}-star comfort for premium guests`);
+  return reasons.slice(0, 5);
+}
+
+function getMatchLabel(score) {
+  if (score >= 88) return { label:'EXCELLENT MATCH', tier:'excellent', color:'#16a34a' };
+  if (score >= 68) return { label:'GOOD MATCH',      tier:'good',      color:'#b45309' };
+  return              { label:'FAIR MATCH',           tier:'fair',      color:'#d97706' };
+}
+
+function matchHotels(event, maxKm) {
+  return hotels
+    .map(h => {
+      const km = haversineKm(event.lat, event.lng, h.lat, h.lng);
+      if (km > maxKm) return null;
+      const dScore = distanceScore(km);
+      const cScore = capacityScore(h.capacity, event.capacity);
+      const tScore = eventTypeScore(h, event.type);
+      const aScore = amenityScore(h, event.type);
+      const matchScore = Math.round(dScore*0.4 + cScore*0.25 + tScore*0.2 + aScore*0.15);
+      const availableRooms = Math.round(h.capacity * (0.55 + Math.random()*0.35));
+      const reasons = getMatchReasons(h, event, km);
+      return { ...h, km, matchScore, availableRooms, reasons };
+    })
+    .filter(Boolean)
+    .sort((a,b) => b.matchScore - a.matchScore);
+}
+
+// ── UI ────────────────────────────────────────────────────────
+let currentMatches = [];
+let activeFilter = 'all';
+
+function init() {
+  const sel = document.getElementById('eventSelector');
+  events.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.id;
+    opt.textContent = `${e.image} ${e.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+function onEventChange() {
+  const id = parseInt(document.getElementById('eventSelector').value);
+  if (!id) return;
+  runAIMatching();
+}
+
+function runAIMatching() {
+  const id = parseInt(document.getElementById('eventSelector').value);
+  if (!id) { showToast('Please select an event first.','info'); return; }
+  const event = events.find(e=>e.id===id);
+  const maxKm = parseInt(document.getElementById('radiusSelector').value);
+
+  // Loading flash
+  const grid = document.getElementById('hotelsGrid');
+  grid.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--sage)"><div style="font-size:2.5rem;margin-bottom:0.75rem;display:inline-block;animation:spin 1s linear infinite">🤖</div><div style="font-weight:700">Running AI matching algorithm...</div><div style="font-size:0.78rem;margin-top:0.35rem">Scoring hotels by distance, capacity, event type, and amenities</div></div>`;
+  document.getElementById('emptyState').style.display = 'none';
+  grid.style.display = 'flex';
+  document.getElementById('filterRow').style.display = 'flex';
+
+  setTimeout(() => {
+    currentMatches = matchHotels(event, maxKm);
+    activeFilter = 'all';
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector('.filter-tab').classList.add('active');
+    renderHotels(currentMatches, event);
+    renderStats(currentMatches, event);
+    renderAnalysis(currentMatches, event);
+    showToast(`Matched ${currentMatches.length} hotels for ${event.name}!`, 'success');
+  }, 600);
+}
+
+function setHotelFilter(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const id = parseInt(document.getElementById('eventSelector').value);
+  const event = events.find(e=>e.id===id);
+  let filtered = currentMatches;
+  if (type === 'excellent') filtered = currentMatches.filter(h=>h.matchScore>=88);
+  else if (type === 'good') filtered = currentMatches.filter(h=>h.matchScore>=68 && h.matchScore<88);
+  else if (type === 'fair') filtered = currentMatches.filter(h=>h.matchScore<68);
+  document.getElementById('filterStatus').textContent = `Showing ${filtered.length} hotels`;
+  renderHotels(filtered, event);
+}
+
+function rerunFilter() {
+  if (currentMatches.length) runAIMatching();
+}
+
+function renderStats(matches, event) {
+  const sr = document.getElementById('statsRow');
+  sr.style.display = 'grid';
+  const totalRooms = matches.reduce((s,h)=>s+h.capacity,0);
+  const availableRooms = matches.reduce((s,h)=>s+h.availableRooms,0);
+  const coverage = event.capacity > 0 ? ((availableRooms/event.capacity)*100).toFixed(1) : 0;
+  document.getElementById('statHotels').textContent   = matches.length;
+  document.getElementById('statRooms').textContent    = totalRooms.toLocaleString();
+  document.getElementById('statAvailable').textContent= availableRooms.toLocaleString();
+  document.getElementById('statCoverage').textContent = coverage + '%';
+}
+
+function renderHotels(matches, event) {
+  const grid = document.getElementById('hotelsGrid');
+  if (!matches.length) {
+    grid.innerHTML = `<div class="card-box" style="text-align:center;padding:2.5rem">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem">🏨</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem">No hotels matched</div>
+      <p style="font-size:0.8rem;color:var(--sage)">Try increasing the search radius or adjust the filters.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = matches.map((h, idx) => {
+    const match = getMatchLabel(h.matchScore);
+    const starsHtml = '⭐'.repeat(h.stars);
+    const amenityTags = h.amenities.slice(0,5).map(a => `<span style="background:rgba(212,146,10,0.08);color:var(--sage);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.62rem;font-weight:700">${a}</span>`).join('');
+    return `<div class="hotel-card ${match.tier} anim" style="display:flex;overflow:hidden">
+      <!-- Match score -->
+      <div style="width:90px;flex-shrink:0;background:rgba(${match.tier==='excellent'?'22,163,74':match.tier==='good'?'212,146,10':'240,180,41'},0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-right:1px solid rgba(212,146,10,0.08)">
+        <div style="font-size:0.55rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:${match.color};margin-bottom:0.5rem;text-align:center">${idx+1}${ordinal(idx+1)} Match</div>
+        <div class="score-ring ${match.tier}">
+          <div class="score-num" style="color:${match.color}">${h.matchScore}</div>
+          <div class="score-label" style="color:${match.color}">%</div>
+        </div>
+        <div style="font-size:0.55rem;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;color:${match.color};margin-top:0.5rem;text-align:center">${match.label}</div>
+      </div>
+      <!-- Hotel info -->
+      <div style="flex:1;padding:1.25rem" class="hotel-card-body">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
+              <span style="font-size:1.3rem">${h.imgEmoji}</span>
+              <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700">${h.name}</h3>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+              <span class="stars">${starsHtml}</span>
+              <span style="font-size:0.72rem;color:var(--sage)">📍 ${h.km.toFixed(1)} km from event</span>
+              <span style="font-size:0.72rem;color:var(--sage)">🛏️ ${h.capacity} rooms (${h.availableRooms} available)</span>
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--crimson)">₱${h.priceMin.toLocaleString()}-${h.priceMax.toLocaleString()}</div>
+            <div style="font-size:0.65rem;color:var(--sage)">per night</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.75rem">${amenityTags}</div>
+        <div style="margin-bottom:0.875rem">
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.35rem">🎯 Why This Match</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.2rem">
+            ${h.reasons.map(r=>`<li style="font-size:0.75rem;color:var(--charcoal);display:flex;align-items:flex-start;gap:0.35rem"><span style="color:#16a34a;flex-shrink:0">✓</span>${r}</li>`).join('')}
+          </ul>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+          <a href="tel:${h.contact}" class="btn-fire btn-sm">📞 Contact</a>
+          <a href="${h.website}" target="_blank" rel="noopener" class="btn-ghost btn-sm" style="font-size:0.7rem">🔗 Website</a>
+          <button class="btn-ghost btn-sm" onclick="viewHotelDetail(${h.id})" style="font-size:0.7rem">+ More Info</button>
+          <button class="btn-ghost btn-sm" onclick="removeMatch(${h.id})" style="font-size:0.7rem;color:var(--crimson);border-color:rgba(196,30,58,0.25)" title="Remove from recommendations">✕ Remove</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAnalysis(matches, event) {
+  const panel = document.getElementById('analysisPanel');
+  if (!matches.length) { panel.style.display='none'; return; }
+  panel.style.display = 'block';
+  const totalRooms = matches.reduce((s,h)=>s+h.capacity,0);
+  const available  = matches.reduce((s,h)=>s+h.availableRooms,0);
+  const coverage   = event.capacity > 0 ? ((available/event.capacity)*100).toFixed(1) : 0;
+
+  panel.innerHTML = `<div class="card-box" style="background:rgba(27,58,45,0.04);border-color:rgba(27,58,45,0.15)">
+    <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:1rem">
+      <div style="width:36px;height:36px;border-radius:9px;background:rgba(59,130,246,0.12);display:flex;align-items:center;justify-content:center;font-size:1.1rem">📊</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700">Accommodation Analysis for ${event.name}</h3>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.875rem;margin-bottom:1rem">
+      <div style="padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Total Rooms in Area</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700">${totalRooms.toLocaleString()}</div>
+      </div>
+      <div style="padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Available for Event Dates</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700">${available.toLocaleString()} <span style="font-size:0.8rem;color:var(--sage)">(est.)</span></div>
+      </div>
+      <div style="padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Coverage for ${event.capacity.toLocaleString()} Attendees</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:${parseFloat(coverage)>=20?'var(--moss)':parseFloat(coverage)>=10?'var(--gold)':'var(--crimson)'}">${coverage}%</div>
+      </div>
+      <div style="padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+        <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.3rem">Best Match Score</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--crimson)">${matches[0]?.matchScore || 0}% — ${matches[0]?.name || '—'}</div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--sage);line-height:1.6">
+      <strong>AI Recommendation:</strong> ${generateAISummary(matches, event, coverage)}
+    </p>
+  </div>`;
+}
+
+function generateAISummary(matches, event, coverage) {
+  const excellent = matches.filter(h=>h.matchScore>=88).length;
+  if (!matches.length) return 'No hotels found within the specified radius. Consider expanding the search radius.';
+  const top = matches[0];
+  const pct = parseFloat(coverage);
+  let summary = `Based on AI analysis, <strong>${matches.length} hotels</strong> were matched within the search radius. `;
+  if (excellent > 0) summary += `${excellent} hotel(s) scored as "Excellent Match". `;
+  summary += `The top recommendation, <strong>${top.name}</strong>, scores ${top.matchScore}% due to its ${top.km.toFixed(1)}km proximity. `;
+  if (pct < 15) summary += `⚠️ Current accommodation coverage (${coverage}%) may be insufficient for ${event.capacity.toLocaleString()} expected attendees — consider partnering with hotels beyond ${document.getElementById('radiusSelector').value}km.`;
+  else if (pct < 30) summary += `Coverage of ${coverage}% provides moderate accommodation. Consider negotiating group rates with the top 3 hotels.`;
+  else summary += `Coverage of ${coverage}% is adequate for the expected attendance.`;
+  return summary;
+}
+
+function viewHotelDetail(id) {
+  const h = hotels.find(x=>x.id===id);
+  const match = currentMatches.find(x=>x.id===id);
+  if (!h) return;
+  document.getElementById('hotelModalTitle').textContent = `${h.imgEmoji} ${h.name}`;
+  const matchInfo = match ? `<div style="background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.15);border-radius:10px;padding:0.875rem;margin-bottom:1rem">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:0.75rem;font-weight:700;color:var(--moss)">AI Match Score</span>
+      <span style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:${getMatchLabel(match.matchScore).color}">${match.matchScore}%</span>
+    </div>
+    <div style="font-size:0.72rem;color:var(--sage)">${match.km.toFixed(1)} km from selected event</div>
+  </div>` : '';
+  document.getElementById('hotelModalContent').innerHTML = `
+    ${matchInfo}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1rem;font-size:0.82rem">
+      <div><strong>Stars:</strong> ${'⭐'.repeat(h.stars)}</div>
+      <div><strong>Total Rooms:</strong> ${h.capacity}</div>
+      <div><strong>Price Range:</strong> ₱${h.priceMin.toLocaleString()} – ₱${h.priceMax.toLocaleString()}/night</div>
+      ${match?`<div><strong>Available Rooms:</strong> ~${match.availableRooms}</div>`:''}
+      <div style="grid-column:1/-1"><strong>Contact:</strong> ${h.contact}</div>
+      <div style="grid-column:1/-1"><strong>Website:</strong> <a href="${h.website}" target="_blank" rel="noopener" style="color:var(--crimson)">${h.website}</a></div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem">Description</div>
+      <p style="font-size:0.82rem;line-height:1.6;color:var(--charcoal)">${h.description}</p>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem">Amenities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.35rem">${h.amenities.map(a=>`<span style="background:rgba(212,146,10,0.1);color:var(--gold);border:1px solid rgba(212,146,10,0.2);padding:0.2rem 0.65rem;border-radius:4px;font-size:0.68rem;font-weight:700">${a}</span>`).join('')}</div>
+    </div>
+    ${match && match.reasons.length ? `<div>
+      <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem">Why AI Recommended This Hotel</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem">${match.reasons.map(r=>`<li style="font-size:0.78rem;color:var(--charcoal);display:flex;gap:0.4rem;align-items:flex-start"><span style="color:#16a34a;flex-shrink:0">✓</span>${r}</li>`).join('')}</ul>
+    </div>` : ''}
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem">
+      <a href="tel:${h.contact}" class="btn-fire" style="flex:1;justify-content:center">📞 Contact Hotel</a>
+      <a href="${h.website}" target="_blank" rel="noopener" class="btn-ghost" style="flex:1;justify-content:center">🔗 Visit Website</a>
+    </div>`;
+  openModal('hotelModal');
+}
+
+function removeMatch(id) {
+  currentMatches = currentMatches.filter(h=>h.id!==id);
+  const id2 = parseInt(document.getElementById('eventSelector').value);
+  const event = events.find(e=>e.id===id2);
+  setHotelFilter(activeFilter, null);
+  if (event) { renderStats(currentMatches, event); renderAnalysis(currentMatches, event); }
+  showToast('Hotel removed from recommendations.', 'info');
+}
+
+function exportRecommendations() {
+  if (!currentMatches.length) { showToast('Run AI matching first.','info'); return; }
+  const id = parseInt(document.getElementById('eventSelector').value);
+  const event = events.find(e=>e.id===id);
+  const lines = [`AI ACCOMMODATION MATCHING REPORT\n${'='.repeat(50)}\nEvent: ${event ? event.name : '?'}\nDate: ${event ? event.date : '?'}\nGenerated: ${new Date().toLocaleString('en-PH')}\n${'='.repeat(50)}\n`];
+  currentMatches.forEach((h,i) => {
+    lines.push(`\n${i+1}. ${h.name} (${h.matchScore}% Match — ${getMatchLabel(h.matchScore).label})`);
+    lines.push(`   Distance: ${h.km.toFixed(1)} km | Stars: ${'★'.repeat(h.stars)} | Rooms: ${h.capacity} (${h.availableRooms} available)`);
+    lines.push(`   Price: ₱${h.priceMin.toLocaleString()}-${h.priceMax.toLocaleString()}/night`);
+    lines.push(`   Contact: ${h.contact} | Web: ${h.website}`);
+    lines.push(`   Amenities: ${h.amenities.join(', ')}`);
+    lines.push(`   Reasons: ${h.reasons.join(' | ')}`);
+  });
+  const blob = new Blob([lines.join('\n')], { type:'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=`accommodations-${id||'event'}.txt`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Report exported!', 'success');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, type='info') {
+  const ex = document.querySelector('.toast'); if (ex) ex.remove();
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||icons.info}</span><span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(),400); }, 3500);
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(id)  { const m=document.getElementById(id); if(m){m.classList.add('open');document.body.style.overflow='hidden';} }
+function closeModal(id) { const m=document.getElementById(id); if(m){m.classList.remove('open');document.body.style.overflow='';} }
+document.addEventListener('click', e => { if(e.target.classList.contains('modal-overlay')){e.target.classList.remove('open');document.body.style.overflow='';} });
+
+// spin animation for loading
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+document.addEventListener('DOMContentLoaded', init);
+
+window.openModal    = openModal;
+window.closeModal   = closeModal;
+window.runAIMatching = runAIMatching;
+window.viewHotelDetail = viewHotelDetail;
+window.removeMatch  = removeMatch;
+window.setHotelFilter = setHotelFilter;
+window.rerunFilter  = rerunFilter;
+window.exportRecommendations = exportRecommendations;
+window.onEventChange = onEventChange;
+</script>
+</body>
+</html>

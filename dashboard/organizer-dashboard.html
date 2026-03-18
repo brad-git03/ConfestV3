@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizer Dashboard | Pampanga Events</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎪</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Instrument+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson:    #C41E3A;
+  --ember:      #D4460A;
+  --gold:       #D4920A;
+  --amber:      #F0B429;
+  --lantern-glow: #FF6B1A;
+  --forest:     #1B3A2D;
+  --moss:       #2D5A3D;
+  --sage:       #4A7C5F;
+  --fern:       #6B9E7A;
+  --mist:       #C8DDD0;
+  --ink:        #120808;
+  --charcoal:   #2A1515;
+  --parchment:  #FBF4E8;
+  --cream:      #FFF8EF;
+  --bone:       #F5EDD8;
+  --g-fire:   linear-gradient(135deg, #8B0000 0%, #C41E3A 40%, #D4920A 100%);
+  --g-ember:  linear-gradient(160deg, #5C0010 0%, #C41E3A 50%, #D4920A 100%);
+  --g-eco:    linear-gradient(135deg, #1B3A2D 0%, #2D5A3D 60%, #4A7C5F 100%);
+  --g-dusk:   linear-gradient(180deg, #120808 0%, #2A1515 50%, #1B3A2D 100%);
+  --g-split:  linear-gradient(160deg, #1B0A08 0%, #3A1010 35%, #1B3A2D 70%, #0D2018 100%);
+  --glow-fire:  0 0 40px rgba(196,30,58,0.4), 0 8px 32px rgba(196,30,58,0.2);
+  --glow-gold:  0 0 30px rgba(212,146,10,0.45), 0 4px 20px rgba(212,146,10,0.25);
+  --glow-eco:   0 0 30px rgba(27,58,45,0.5), 0 4px 20px rgba(75,124,95,0.25);
+  --shadow-card: 0 2px 16px rgba(18,8,8,0.1), 0 1px 4px rgba(18,8,8,0.06);
+  --shadow-lift: 0 20px 60px rgba(18,8,8,0.2), 0 4px 16px rgba(18,8,8,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Instrument Sans', sans-serif; background: var(--bone); color: var(--ink); overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+/* ── DASHBOARD LAYOUT ── */
+.dashboard-layout { display: flex; min-height: 100vh; }
+.sidebar { width: 252px; background: var(--g-dusk); position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100; border-right: 1px solid rgba(212,146,10,0.1); display: flex; flex-direction: column; }
+.sidebar-logo { padding: 1.3rem 1.4rem; border-bottom: 1px solid rgba(212,146,10,0.1); }
+.sidebar-role { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(200,221,208,0.3); margin-top: 0.2rem; font-weight: 700; }
+.sidebar-user { padding: 1rem 1.4rem; border-bottom: 1px solid rgba(212,146,10,0.08); display: flex; align-items: center; gap: 0.75rem; }
+.sidebar-avatar { width: 40px; height: 40px; border-radius: 10px; background: var(--g-fire); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: white; box-shadow: 0 4px 12px rgba(196,30,58,0.3); flex-shrink: 0; }
+.sidebar-name { font-size: 0.8rem; font-weight: 700; color: var(--bone); }
+.sidebar-email { font-size: 0.65rem; color: rgba(200,221,208,0.3); }
+.sidebar-nav { padding: 0.75rem 0; flex: 1; }
+.sidebar-section { font-size: 0.57rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(200,221,208,0.22); font-weight: 700; padding: 0.75rem 1.4rem 0.35rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1.4rem; color: rgba(200,221,208,0.5); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; border-left: 2.5px solid transparent; }
+.sidebar-link:hover { background: rgba(212,146,10,0.07); color: var(--amber); border-left-color: rgba(212,146,10,0.3); }
+.sidebar-link.active { background: rgba(196,30,58,0.14); color: #FFC9A0; border-left-color: var(--lantern-glow); }
+.sidebar-link .icon { font-size: 0.95rem; width: 20px; text-align: center; }
+.sidebar-eco { margin: auto 1.2rem 1.2rem; background: rgba(27,58,45,0.3); border: 1px solid rgba(75,124,95,0.2); border-radius: 10px; padding: 0.875rem; }
+.sidebar-eco p { font-size: 0.68rem; color: rgba(200,221,208,0.6); line-height: 1.55; }
+.dashboard-main { margin-left: 252px; flex: 1; background: var(--bone); min-height: 100vh; }
+.dashboard-topbar { background: var(--cream); padding: 0.875rem 2rem; border-bottom: 1px solid rgba(212,146,10,0.1); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(18,8,8,0.05); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+.topbar-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.dashboard-content { padding: clamp(1rem, 2.4vw, 2rem); }
+.dashboard-main > .dashboard-page { padding: clamp(1rem, 2.4vw, 2rem); }
+.dashboard-page { display: none; }
+.dashboard-page.active { display: block; }
+
+/* ── STAT CARDS ── */
+.stat-card { background: white; border-radius: 12px; padding: 1.3rem; border: 1px solid rgba(212,146,10,0.1); display: flex; align-items: center; gap: 0.875rem; box-shadow: var(--shadow-card); }
+.stat-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+.stat-icon.fire { background: rgba(196,30,58,0.1); }
+.stat-icon.gold { background: rgba(212,146,10,0.1); }
+.stat-icon.eco  { background: rgba(27,58,45,0.1); }
+.stat-icon.blue { background: rgba(37,99,235,0.08); }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 1.65rem; font-weight: 700; color: var(--ink); line-height: 1; }
+.stat-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-top: 0.15rem; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { padding: 0.65rem 0.875rem; text-align: left; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; color: var(--sage); background: rgba(212,146,10,0.04); border-bottom: 1.5px solid rgba(212,146,10,0.1); }
+.data-table td { padding: 0.75rem 0.875rem; border-bottom: 1px solid rgba(212,146,10,0.07); font-size: 0.8rem; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(212,146,10,0.02); }
+
+/* ── BUTTONS ── */
+.btn-fire { background: var(--g-fire); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 16px rgba(196,30,58,0.3); overflow: hidden; position: relative; }
+.btn-fire:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,30,58,0.5); }
+.btn-eco { background: var(--g-eco); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 16px rgba(27,58,45,0.3); }
+.btn-eco:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(27,58,45,0.45); }
+.btn-gold { background: var(--gold); color: white; border: none; padding: 0.7rem 1.6rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 14px rgba(212,146,10,0.35); }
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,146,10,0.5); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid rgba(212,146,10,0.25); padding: 0.65rem 1.4rem; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-ghost:hover { border-color: var(--ember); color: var(--ember); }
+.btn-sm { padding: 0.42rem 0.95rem; font-size: 0.68rem; }
+.btn-danger { background: rgba(196,30,58,0.1); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); padding: 0.4rem 0.875rem; border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-danger:hover { background: var(--crimson); color: white; }
+.btn-success { background: rgba(27,58,45,0.1); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); padding: 0.4rem 0.875rem; border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-success:hover { background: var(--moss); color: white; }
+.inline-empty-cta { margin-left: 0.6rem; }
+
+/* ── FORMS ── */
+.form-group { margin-bottom: 1.1rem; }
+.form-label { display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--charcoal); margin-bottom: 0.4rem; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 0.7rem 0.95rem; border: 1.5px solid rgba(212,146,10,0.2); border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: 0.88rem; color: var(--ink); background: white; transition: all 0.2s; outline: none; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,146,10,0.1); }
+.form-textarea { resize: vertical; min-height: 88px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(18,8,8,0.78); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; visibility: hidden; transition: all 0.3s; }
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal { background: var(--cream); border-radius: 20px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; padding: 2.25rem; transform: scale(0.9) translateY(20px); transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 40px 80px rgba(18,8,8,0.35); border: 1px solid rgba(212,146,10,0.18); }
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1.5px solid rgba(212,146,10,0.12); }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; }
+.modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(18,8,8,0.07); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: var(--ink); transition: all 0.2s; }
+.modal-close:hover { background: rgba(196,30,58,0.1); color: var(--crimson); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.badge-eco   { background: rgba(27,58,45,0.12); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.badge-local { background: rgba(212,146,10,0.12); color: var(--gold); border: 1px solid rgba(212,146,10,0.2); }
+.badge-pending  { background: rgba(212,146,10,0.1); color: #b45309; border: 1px solid rgba(212,146,10,0.25); }
+.badge-accepted { background: rgba(27,58,45,0.1); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.badge-rejected { background: rgba(196,30,58,0.08); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); }
+.badge-food    { background: rgba(212,146,10,0.1); color: var(--gold); border: 1px solid rgba(212,146,10,0.2); }
+.badge-waste   { background: rgba(27,58,45,0.1); color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.badge-sponsor { background: rgba(196,30,58,0.08); color: var(--crimson); border: 1px solid rgba(196,30,58,0.2); }
+.badge-hotel   { background: rgba(37,99,235,0.08); color: #1d4ed8; border: 1px solid rgba(37,99,235,0.2); }
+
+/* ── SEARCH / FILTER ── */
+.search-bar { display: flex; align-items: center; background: white; border: 1.5px solid rgba(212,146,10,0.18); border-radius: 8px; padding: 0.5rem 0.5rem 0.5rem 1.1rem; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 2px 10px rgba(18,8,8,0.05); }
+.search-bar:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,146,10,0.1); }
+.search-bar input { flex: 1; border: none; outline: none; font-family: 'Instrument Sans', sans-serif; font-size: 0.88rem; background: transparent; color: var(--ink); }
+.search-bar input::placeholder { color: var(--sage); }
+.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.filter-tab { padding: 0.42rem 1.1rem; border: 1.5px solid rgba(212,146,10,0.18); border-radius: 6px; background: white; color: var(--sage); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; cursor: pointer; transition: all 0.2s; font-family: 'Instrument Sans', sans-serif; text-transform: uppercase; }
+.filter-tab:hover, .filter-tab.active { border-color: var(--crimson); background: var(--crimson); color: white; }
+
+/* ── CARD ── */
+.card-box { background: white; border-radius: 14px; padding: 1.5rem; border: 1px solid rgba(212,146,10,0.1); box-shadow: var(--shadow-card); }
+.card-title-sm { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 1.1rem; }
+
+/* ── PROGRESS ── */
+.progress-bar { height: 5px; background: rgba(212,146,10,0.1); border-radius: 50px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--g-fire); border-radius: 50px; transition: width 0.6s; }
+.progress-fill.eco { background: var(--g-eco); }
+
+/* ── RATING STARS ── */
+.stars { color: var(--amber); font-size: 0.8rem; letter-spacing: 1px; }
+
+/* ── ALERT ── */
+.alert { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.875rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.alert-info    { background: rgba(37,99,235,0.07);   color: #1d4ed8; border: 1px solid rgba(37,99,235,0.18); }
+.alert-success { background: rgba(27,58,45,0.1);     color: var(--moss); border: 1px solid rgba(27,58,45,0.2); }
+.alert-warning { background: rgba(212,146,10,0.1);   color: var(--gold); border: 1px solid rgba(212,146,10,0.22); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 1.75rem; right: 1.75rem; background: var(--ink); color: var(--bone); padding: 0.875rem 1.3rem; border-radius: 10px; box-shadow: 0 10px 40px rgba(18,8,8,0.35); z-index: 9999; display: flex; align-items: center; gap: 0.65rem; transform: translateY(80px); opacity: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); border-left: 3px solid var(--gold); max-width: 330px; font-size: 0.82rem; font-weight: 600; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left-color: var(--moss); }
+.toast.error   { border-left-color: var(--crimson); }
+.toast.warning { border-left-color: var(--amber); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.anim { animation: fadeInUp 0.55s ease forwards; opacity: 0; }
+.d1{animation-delay:0.05s}.d2{animation-delay:0.12s}.d3{animation-delay:0.19s}.d4{animation-delay:0.26s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s}.sidebar.open{transform:translateX(0)}
+  .dashboard-main{margin-left:0}
+  .dashboard-topbar{padding:0.875rem 1rem}
+  .topbar-actions{width:100%;justify-content:flex-start}
+  .dashboard-content,.dashboard-main > .dashboard-page{padding:1rem}
+  .inline-empty-cta{display:block;width:max-content;margin:0.55rem auto 0}
+  .form-row{grid-template-columns:1fr}
+  #sidebarToggle{display:flex!important}
+}
+</style>
+</head>
+<body id="organizerDashboard">
+<div class="dashboard-layout">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" style="display:inline-flex;align-items:center;text-decoration:none;">
+      <svg width="160" height="34" viewBox="0 0 160 34" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dl-fire" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#E8453A"/><stop offset="100%" style="stop-color:#F0B429"/></linearGradient>
+          <linearGradient id="dl-eco"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6B9E7A"/><stop offset="100%" style="stop-color:#A8D5B8"/></linearGradient>
+          <linearGradient id="dl-gold" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#F0B429"/><stop offset="100%" style="stop-color:#FFD080"/></linearGradient>
+        </defs>
+        <g transform="translate(2,1)">
+          <ellipse cx="13" cy="16" rx="7" ry="9.5" fill="url(#dl-fire)" opacity="0.1"/>
+          <ellipse cx="13" cy="16" rx="6.5" ry="9" fill="none" stroke="url(#dl-fire)" stroke-width="1.4"/>
+          <rect x="10" y="6" width="7" height="3" rx="1.2" fill="url(#dl-gold)"/>
+          <path d="M13 6 L13 2.5 Q13 1 15.5 1" fill="none" stroke="url(#dl-gold)" stroke-width="0.9" stroke-linecap="round"/>
+          <line x1="13" y1="25" x2="13" y2="30" stroke="url(#dl-gold)" stroke-width="1" stroke-linecap="round"/>
+          <path d="M20 22 Q24 19 23 14 Q22 17 19 20 Z" fill="url(#dl-eco)" opacity="0.5"/>
+        </g>
+        <text x="32" y="22" font-family="'Cinzel Decorative', serif" font-size="16" font-weight="900" fill="url(#dl-fire)" letter-spacing="1">CON</text>
+        <text x="81" y="22" font-family="'Cinzel Decorative', serif" font-size="16" font-weight="900" fill="url(#dl-eco)" letter-spacing="1">FEST</text>
+      </svg>
+    </a>
+    <div class="sidebar-role">Organizer Dashboard</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="sidebar-avatar" id="sidebarAvatarOrg">OR</div>
+    <div>
+      <div class="sidebar-name" id="sidebarNameOrg">Organizer</div>
+      <div class="sidebar-email" id="sidebarEmailOrg">organizer@events.ph</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">Main</div>
+    <button class="sidebar-link active" data-page="orgOverview" onclick="showPage('orgOverview')"><span class="icon">📊</span><span>Overview</span></button>
+    <button class="sidebar-link" data-page="orgEvents" onclick="showPage('orgEvents')"><span class="icon">🎪</span><span>My Events</span></button>
+    <button class="sidebar-link" data-page="orgAnnouncements" onclick="showPage('orgAnnouncements')"><span class="icon">📢</span><span>Announcements</span></button>
+    <div class="sidebar-section">Manage</div>
+    <button class="sidebar-link" data-page="orgInvitations" onclick="showPage('orgInvitations')"><span class="icon">✉️</span><span>Invitations</span></button>
+    <button class="sidebar-link" data-page="orgBusinesses" onclick="showPage('orgBusinesses')"><span class="icon">🏢</span><span>Businesses</span></button>
+    <button class="sidebar-link" data-page="orgSponsors" onclick="showPage('orgSponsors')"><span class="icon">💼</span><span>Sponsor Invites</span></button>
+    <button class="sidebar-link" data-page="orgApplications" onclick="showPage('orgApplications')"><span class="icon">📋</span><span>Applications</span></button>
+    <button class="sidebar-link" data-page="orgAccommodations" onclick="showPage('orgAccommodations')"><span class="icon">🏨</span><span>Accommodations</span></button>
+    <div class="sidebar-section">Insights</div>
+    <button class="sidebar-link" data-page="orgAnalytics" onclick="showPage('orgAnalytics')"><span class="icon">📈</span><span>Analytics</span></button>
+    <button class="sidebar-link" data-page="orgSettings" onclick="showPage('orgSettings')"><span class="icon">⚙️</span><span>Settings</span></button>
+    <div class="sidebar-section">Navigation</div>
+    <a class="sidebar-link" href="../index.html"><span class="icon">🌐</span><span>Public Site</span></a>
+    <a class="sidebar-link" href="../events.html"><span class="icon">🎟️</span><span>View Events</span></a>
+    <a class="sidebar-link" href="../login.html"><span class="icon">🚪</span><span>Sign Out</span></a>
+  </nav>
+  <div class="sidebar-eco">
+    <div style="font-size:0.58rem;color:var(--fern);font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem">🌿 Eco Pledge</div>
+    <p>This platform is carbon-neutral. Every ticket plants a tree in Pampanga.</p>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="dashboard-main">
+  <div class="dashboard-topbar">
+    <div style="display:flex;align-items:center;gap:0.875rem">
+      <button id="sidebarToggle" style="display:none;background:none;border:none;cursor:pointer;font-size:1.2rem" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+      <h2 class="topbar-title" id="pageTitle">Overview</h2>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-fire btn-sm" onclick="openModal('createEventModal')">＋ New Event</button>
+      <button class="btn-eco btn-sm" onclick="openModal('postAnnouncementModal')">📢 Announce</button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="dashboard-page active" id="orgOverview">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.75rem">
+        <div class="stat-card anim d1"><div class="stat-icon fire">🎪</div><div><div class="stat-num" id="statMyEvents">0</div><div class="stat-label">My Events</div></div></div>
+        <div class="stat-card anim d2"><div class="stat-icon gold">🎟️</div><div><div class="stat-num" id="statTicketsSold">0</div><div class="stat-label">Tickets Sold</div></div></div>
+        <div class="stat-card anim d3"><div class="stat-icon eco">⏳</div><div><div class="stat-num" id="statPendingApps">0</div><div class="stat-label">Pending Apps</div></div></div>
+        <div class="stat-card anim d4"><div class="stat-icon blue">✉️</div><div><div class="stat-num" id="statActiveInvites">0</div><div class="stat-label">Active Invites</div></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">🎪 Recent Events</h3>
+          <div id="overviewEventsList"></div>
+        </div>
+        <div class="card-box">
+          <h3 class="card-title-sm">📢 Recent Announcements</h3>
+          <div id="overviewAnnouncementsList"></div>
+          <div style="margin-top:1rem">
+            <button class="btn-eco btn-sm" onclick="openModal('postAnnouncementModal')" style="width:100%;justify-content:center">+ Post Announcement</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">⏳ Pending Applications</h3>
+          <div id="overviewPendingList"></div>
+          <button class="btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:1rem" onclick="showPage('orgApplications')">View All Applications →</button>
+        </div>
+        <div class="card-box">
+          <h3 class="card-title-sm">🚀 Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:0.6rem">
+            <button class="btn-fire" style="justify-content:flex-start" onclick="openModal('createEventModal')">🎪 Create New Event</button>
+            <button class="btn-eco" style="justify-content:flex-start" onclick="showPage('orgBusinesses')">🏢 Browse Businesses</button>
+            <button class="btn-gold" style="justify-content:flex-start" onclick="showPage('orgInvitations')">✉️ Send Invitations</button>
+            <button class="btn-ghost" style="justify-content:flex-start" onclick="showPage('orgApplications')">📋 Review Applications</button>
+            <button class="btn-ghost" style="justify-content:flex-start" onclick="showPage('orgSponsors')">💼 Invite Sponsors</button>
+            <button class="btn-ghost" style="justify-content:flex-start" onclick="showPage('orgAccommodations')">🏨 Accommodations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MY EVENTS ── -->
+    <div class="dashboard-page" id="orgEvents">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">My Events</h2>
+        <button class="btn-fire" onclick="openModal('createEventModal')">＋ Create Event</button>
+      </div>
+      <div class="card-box" style="padding:0;overflow:hidden">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Event</th><th>Category</th><th>Date</th><th>Tickets</th><th>Revenue</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ANNOUNCEMENTS ── -->
+    <div class="dashboard-page" id="orgAnnouncements">
+      <!-- Tab switcher -->
+      <div style="display:flex;gap:0.3rem;margin-bottom:1.4rem;flex-wrap:wrap" id="annTypeTabs">
+        <button class="filter-tab active" data-anntype="businessCalls" onclick="switchAnnTab('businessCalls')">📢 Business Calls</button>
+        <button class="filter-tab" data-anntype="eventAnnouncements" onclick="switchAnnTab('eventAnnouncements')">🔔 Event Announcements</button>
+      </div>
+
+      <!-- Business Calls sub-panel -->
+      <div id="annTab_businessCalls">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.875rem">
+          <div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700">Public Business Calls</h3>
+            <div style="font-size:0.72rem;color:var(--sage);margin-top:0.2rem">Post open calls for vendors, sponsors, hotels & waste management partners</div>
+          </div>
+          <button class="btn-eco" onclick="openModal('createPublicAnnModal')">＋ Create Business Call</button>
+        </div>
+        <div id="publicAnnList" style="display:flex;flex-direction:column;gap:0.875rem"></div>
+      </div>
+
+      <!-- Event Announcements sub-panel -->
+      <div id="annTab_eventAnnouncements" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.875rem">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700">Internal Event Announcements</h3>
+          <button class="btn-eco" onclick="openModal('postAnnouncementModal')">📢 Post Announcement</button>
+        </div>
+        <div id="announcementsList" style="display:flex;flex-direction:column;gap:1rem"></div>
+      </div>
+    </div>
+
+    <!-- ── INVITATIONS ── -->
+    <div class="dashboard-page" id="orgInvitations">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">Invitations</h2>
+        <button class="btn-gold" onclick="openModal('sendInviteModal')">＋ Send Invitation</button>
+      </div>
+      <div style="display:flex;gap:0.4rem;margin-bottom:1.2rem;flex-wrap:wrap" id="inviteFilterTabs">
+        <button class="filter-tab active" data-type="all">All</button>
+        <button class="filter-tab" data-type="food">🍽️ Food Stalls</button>
+        <button class="filter-tab" data-type="waste">♻️ Waste Mgmt</button>
+        <button class="filter-tab" data-type="sponsor">🏢 Sponsors</button>
+        <button class="filter-tab" data-type="hotel">🏨 Hotels</button>
+      </div>
+      <div class="card-box" style="padding:0;overflow:hidden">
+        <table class="data-table">
+          <thead>
+            <tr><th>Business</th><th>Type</th><th>Event</th><th>Sent</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="invitationsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── BUSINESSES ── -->
+    <div class="dashboard-page" id="orgBusinesses">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">Prioritized Businesses</h2>
+        <div style="font-size:0.72rem;color:var(--sage)">Ranked by eco-certification, rating & local status</div>
+      </div>
+      <div style="display:flex;gap:0.875rem;margin-bottom:1.2rem;flex-wrap:wrap">
+        <div class="search-bar" style="flex:1;min-width:200px">
+          <span>🔍</span>
+          <input type="text" id="bizSearch" placeholder="Search businesses…" oninput="filterBusinesses()">
+        </div>
+        <div class="filter-tabs" id="bizFilterTabs">
+          <button class="filter-tab active" data-type="all" onclick="setBizFilter('all')">All</button>
+          <button class="filter-tab" data-type="food" onclick="setBizFilter('food')">🍽️ Food</button>
+          <button class="filter-tab" data-type="waste" onclick="setBizFilter('waste')">♻️ Waste</button>
+          <button class="filter-tab" data-type="sponsor" onclick="setBizFilter('sponsor')">🏢 Sponsor</button>
+          <button class="filter-tab" data-type="hotel" onclick="setBizFilter('hotel')">🏨 Hotel</button>
+        </div>
+      </div>
+      <div id="businessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem"></div>
+    </div>
+
+    <!-- ── APPLICATIONS ── -->
+    <div class="dashboard-page" id="orgApplications">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:0.875rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700">Business Applications</h2>
+        <div class="filter-tabs" id="appFilterTabs">
+          <button class="filter-tab active" data-status="all" onclick="setAppFilter('all')">All</button>
+          <button class="filter-tab" data-status="pending" onclick="setAppFilter('pending')">⏳ Pending</button>
+          <button class="filter-tab" data-status="accepted" onclick="setAppFilter('accepted')">✅ Accepted</button>
+          <button class="filter-tab" data-status="rejected" onclick="setAppFilter('rejected')">❌ Rejected</button>
+        </div>
+      </div>
+      <div id="applicationsList" style="display:flex;flex-direction:column;gap:1rem"></div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div class="dashboard-page" id="orgAnalytics">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.4rem">Analytics</h2>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.75rem">
+        <div class="stat-card"><div class="stat-icon fire">🎟️</div><div><div class="stat-num" id="anaTickets">0</div><div class="stat-label">Total Tickets</div></div></div>
+        <div class="stat-card"><div class="stat-icon gold">💰</div><div><div class="stat-num" id="anaRevenue">₱0</div><div class="stat-label">Total Revenue</div></div></div>
+        <div class="stat-card"><div class="stat-icon eco">📢</div><div><div class="stat-num" id="anaAnnouncements">0</div><div class="stat-label">Announcements</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue">✉️</div><div><div class="stat-num" id="anaInvites">0</div><div class="stat-label">Invites Sent</div></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">📊 Event Performance</h3>
+          <div id="eventPerformanceList"></div>
+        </div>
+        <div class="card-box">
+          <h3 class="card-title-sm">🏆 Top Invited Businesses</h3>
+          <div id="topBusinessesList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="dashboard-page" id="orgSettings">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.4rem">Settings</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+        <div class="card-box">
+          <h3 class="card-title-sm">👤 Organizer Profile</h3>
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="settingName" placeholder="Your full name"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="settingEmail" placeholder="your@email.com"></div>
+          <div class="form-group"><label class="form-label">Organization</label><input type="text" class="form-input" id="settingOrg" placeholder="e.g. Pampanga Tourism Office"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="settingPhone" placeholder="09XX-XXX-XXXX"></div>
+          <button class="btn-fire" style="width:100%;justify-content:center" onclick="saveSettings()">Save Profile</button>
+        </div>
+        <div class="card-box">
+          <h3 class="card-title-sm">⚙️ Preferences</h3>
+          <div class="form-group"><label class="form-label">Default Event Category</label>
+            <select class="form-select" id="settingCategory">
+              <option>Festival</option><option>Food</option><option>Concert</option><option>Cultural</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Default Ticket Price (₱)</label><input type="number" class="form-input" id="settingPrice" placeholder="0 for free events" min="0"></div>
+          <div class="form-group"><label class="form-label">Eco-Friendly Events</label>
+            <select class="form-select" id="settingEco"><option value="true">Yes — always eco-certified</option><option value="false">No — standard events</option></select>
+          </div>
+          <div class="form-group" style="margin-top:1rem">
+            <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);margin-bottom:0.75rem">Notification Preferences</div>
+            <label style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;margin-bottom:0.5rem;cursor:pointer"><input type="checkbox" id="notifApps" checked style="accent-color:var(--crimson)"> New applications</label>
+            <label style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;margin-bottom:0.5rem;cursor:pointer"><input type="checkbox" id="notifInvites" checked style="accent-color:var(--crimson)"> Invitation responses</label>
+            <label style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;cursor:pointer"><input type="checkbox" id="notifTickets" style="accent-color:var(--crimson)"> Ticket purchases</label>
+          </div>
+          <button class="btn-ghost" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="saveSettings()">Save Preferences</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.dashboard-content -->
+
+    <!-- ── SPONSOR INVITATIONS ── -->
+    <div class="dashboard-page" id="orgSponsors">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.875rem">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.25rem">💼 Sponsor Invitations</h2>
+          <p style="font-size:0.8rem;color:var(--sage)">Invite sponsors to your events. Premium sponsors will receive invitations in their portal.</p>
+        </div>
+        <button class="btn-gold" onclick="openModal('sendSponsorInviteModal')">＋ Invite Sponsor</button>
+      </div>
+
+      <div style="display:flex;gap:0.4rem;margin-bottom:1.2rem;flex-wrap:wrap" id="sponsorInvFilterTabs">
+        <button class="filter-tab active" data-status="all"      onclick="filterSponsorInvites('all',this)">All</button>
+        <button class="filter-tab" data-status="pending"         onclick="filterSponsorInvites('pending',this)">⏳ Pending</button>
+        <button class="filter-tab" data-status="accepted"        onclick="filterSponsorInvites('accepted',this)">✅ Accepted</button>
+        <button class="filter-tab" data-status="declined"        onclick="filterSponsorInvites('declined',this)">❌ Declined</button>
+        <button class="filter-tab" data-status="inquired"        onclick="filterSponsorInvites('inquired',this)">🤔 Inquired</button>
+      </div>
+
+      <div class="card-box" style="padding:0;overflow:hidden">
+        <table class="data-table">
+          <thead><tr><th>Company</th><th>Event</th><th>Tier</th><th>Amount</th><th>Sent</th><th>Response</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="sponsorInvTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Received enquiries / responses -->
+      <div id="sponsorInvResponses" style="margin-top:1.4rem"></div>
+    </div>
+
+    <!-- ── ACCOMMODATIONS ── -->
+    <div class="dashboard-page" id="orgAccommodations">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.875rem">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.25rem">🏨 Accommodation Management</h2>
+          <p style="font-size:0.8rem;color:var(--sage)">Manage hotel partnerships and link accommodation recommendations to your events.</p>
+        </div>
+        <a href="../pages/accommodations.html" class="btn-fire" style="text-decoration:none">🤖 Open AI Matching →</a>
+      </div>
+
+      <!-- Partnered hotels summary -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.875rem;margin-bottom:1.5rem">
+        <div class="stat-card"><div class="stat-icon blue">🏨</div><div><div class="stat-num" id="orgStatHotels">4</div><div class="stat-label">Hotel Partners</div></div></div>
+        <div class="stat-card"><div class="stat-icon eco">🛏️</div><div><div class="stat-num" id="orgStatRooms">960</div><div class="stat-label">Total Partner Rooms</div></div></div>
+        <div class="stat-card"><div class="stat-icon gold">📧</div><div><div class="stat-num" id="orgStatHotelInvites">0</div><div class="stat-label">Hotel Invitations Sent</div></div></div>
+      </div>
+
+      <!-- Per-event hotel assignments -->
+      <div class="card-box" style="margin-bottom:1.4rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.875rem">
+          <h3 class="card-title-sm" style="margin-bottom:0">🎪 Assign Hotels to Events</h3>
+          <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+            <select id="accomEventPicker" class="form-select" style="width:auto;min-width:200px" onchange="renderAccomForEvent()">
+              <option value="">— Select an event —</option>
+            </select>
+            <a href="../pages/accommodations.html" class="btn-ghost btn-sm" style="text-decoration:none;display:inline-flex">🤖 AI Match</a>
+          </div>
+        </div>
+        <div id="accomEventDetail" style="font-size:0.82rem;color:var(--sage)">Select an event to view and manage its hotel recommendations.</div>
+      </div>
+
+      <!-- Partner hotels list -->
+      <div class="card-box">
+        <h3 class="card-title-sm">🏨 Partner Hotels</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem" id="partnerHotelsList"></div>
+      </div>
+    </div>
+
+</main>
+</div><!-- /.dashboard-layout -->
+
+<!-- ══════════════════ MODALS ══════════════════ -->
+
+<!-- Create / Edit Event Modal -->
+<div class="modal-overlay" id="createEventModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="createEventModalTitle">🎪 Create New Event</h2>
+      <button class="modal-close" onclick="closeModal('createEventModal')">✕</button>
+    </div>
+    <input type="hidden" id="editEventId">
+    <div class="form-group"><label class="form-label">Event Name</label><input type="text" class="form-input" id="evtName" placeholder="e.g. Pampanga Night Market Festival"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="evtCategory">
+          <option>Festival</option><option>Food</option><option>Concert</option><option>Cultural</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Ticket Price (₱)</label><input type="number" class="form-input" id="evtPrice" placeholder="0 for free" min="0" value="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="evtDate"></div>
+      <div class="form-group"><label class="form-label">Time</label><input type="time" class="form-input" id="evtTime"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" id="evtLocation" placeholder="e.g. San Fernando, Pampanga"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Capacity</label><input type="number" class="form-input" id="evtCapacity" placeholder="e.g. 2000" min="1"></div>
+      <div class="form-group"><label class="form-label">Image / Emoji</label><input type="text" class="form-input" id="evtEmoji" placeholder="e.g. 🎪" maxlength="8"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="evtDesc" placeholder="Describe your event…"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Eco-Friendly</label>
+        <select class="form-select" id="evtEco"><option value="true">✅ Yes</option><option value="false">No</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Local Business Priority</label>
+        <select class="form-select" id="evtLocal"><option value="true">✅ Yes</option><option value="false">No</option></select>
+      </div>
+    </div>
+    <button class="btn-fire" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="saveEvent()">Save Event →</button>
+  </div>
+</div>
+
+<!-- Post Announcement Modal -->
+<div class="modal-overlay" id="postAnnouncementModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">📢 Post Announcement</h2>
+      <button class="modal-close" onclick="closeModal('postAnnouncementModal')">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="annTitle" placeholder="e.g. Change of Schedule Notice"></div>
+    <div class="form-group"><label class="form-label">Target Event</label>
+      <select class="form-select" id="annEventId"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Priority</label>
+        <select class="form-select" id="annPriority">
+          <option value="normal">🔵 Normal</option>
+          <option value="important">🟡 Important</option>
+          <option value="urgent">🔴 Urgent</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Target Audience</label>
+        <select class="form-select" id="annAudience">
+          <option value="all">All Attendees</option>
+          <option value="vip">VIP Ticket Holders</option>
+          <option value="vendors">Vendors Only</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="annMessage" placeholder="Write your announcement here…" style="min-height:110px"></textarea></div>
+    <button class="btn-eco" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="postAnnouncement()">Post Announcement →</button>
+  </div>
+</div>
+
+<!-- Create Public Announcement Modal -->
+<div class="modal-overlay" id="createPublicAnnModal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <h2 class="modal-title">📢 Create Business Call</h2>
+      <button class="modal-close" onclick="closeModal('createPublicAnnModal')">✕</button>
+    </div>
+    <input type="hidden" id="pubAnnEditId" value="">
+    <div class="form-group"><label class="form-label">Title *</label><input class="form-input" id="pubAnnTitle" placeholder="e.g. Calling All Food Vendors!"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Target Event *</label>
+        <select class="form-select" id="pubAnnEventId"></select>
+      </div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="pubAnnStatus">
+          <option value="Open for Applications">Open for Applications</option>
+          <option value="Invitations Sent">Invitations Sent</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Content / Description *</label><textarea class="form-textarea" id="pubAnnContent" rows="4" placeholder="Describe what you're looking for, requirements, benefits…"></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Business Types Needed</label>
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem">
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;cursor:pointer"><input type="checkbox" name="pubAnnType" value="Food"> 🍽️ Food</label>
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;cursor:pointer"><input type="checkbox" name="pubAnnType" value="Waste Management"> ♻️ Waste Management</label>
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;cursor:pointer"><input type="checkbox" name="pubAnnType" value="Hotel"> 🏨 Hotel</label>
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;cursor:pointer"><input type="checkbox" name="pubAnnType" value="Sponsor"> 🏢 Sponsor</label>
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;cursor:pointer"><input type="checkbox" name="pubAnnType" value="Arts & Crafts"> 🎨 Arts &amp; Crafts</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Application Deadline</label><input type="date" class="form-input" id="pubAnnDeadline"></div>
+      <div class="form-group"><label class="form-label">Banner Emoji</label><input class="form-input" id="pubAnnEmoji" value="📢" maxlength="4" style="font-size:1.5rem;text-align:center"></div>
+    </div>
+    <div class="form-group"><label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;cursor:pointer"><input type="checkbox" id="pubAnnFeatured"> Mark as Featured</label></div>
+    <button class="btn-eco" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="savePublicAnnouncement()">Save Business Call →</button>
+  </div>
+</div>
+
+<!-- View Applications Modal -->
+<div class="modal-overlay" id="viewAnnApplicationsModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="viewAnnAppsTitle">📋 Applications</h2>
+      <button class="modal-close" onclick="closeModal('viewAnnApplicationsModal')">✕</button>
+    </div>
+    <div id="viewAnnAppsContent"></div>
+  </div>
+</div>
+
+<!-- Send Invitation Modal -->
+<div class="modal-overlay" id="sendInviteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">✉️ Send Invitation</h2>
+      <button class="modal-close" onclick="closeModal('sendInviteModal')">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Select Business</label>
+      <select class="form-select" id="invBizId">
+        <option value="">— Choose a business —</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Business Type</label>
+        <select class="form-select" id="invBizType">
+          <option value="food">🍽️ Food Stall</option>
+          <option value="waste">♻️ Waste Management</option>
+          <option value="sponsor">🏢 Sponsor</option>
+          <option value="hotel">🏨 Hotel Manager</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Target Event</label>
+        <select class="form-select" id="invEventId"></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Custom Terms / Message</label><textarea class="form-textarea" id="invTerms" placeholder="e.g. 10% commission, 3×3m booth space provided…"></textarea></div>
+    <button class="btn-gold" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="sendInvitation()">Send Invitation →</button>
+  </div>
+</div>
+
+<!-- View Application Modal -->
+<div class="modal-overlay" id="viewApplicationModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">📋 Application Details</h2>
+      <button class="modal-close" onclick="closeModal('viewApplicationModal')">✕</button>
+    </div>
+    <div id="viewApplicationContent"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem" id="viewApplicationActions"></div>
+  </div>
+</div>
+
+<!-- Sponsor Invite Modal -->
+<div class="modal-overlay" id="sendSponsorInviteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">💼 Invite a Sponsor</h2>
+      <button class="modal-close" onclick="closeModal('sendSponsorInviteModal')">✕</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--sage);margin-bottom:1.25rem;padding:0.75rem;background:rgba(212,146,10,0.05);border-radius:8px;border:1px solid rgba(212,146,10,0.15)">
+      ℹ️ Invitations are delivered to Premium-tier sponsors via their Sponsor Portal. Include detailed requirements so sponsors can make an informed decision.
+    </div>
+    <div class="form-group"><label class="form-label">Company Name</label>
+      <input type="text" class="form-input" id="spInvCompany" placeholder="e.g. Kapampangan Corp.">
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Contact Person</label>
+        <input type="text" class="form-input" id="spInvContact" placeholder="Full name">
+      </div>
+      <div class="form-group"><label class="form-label">Contact Email</label>
+        <input type="email" class="form-input" id="spInvEmail" placeholder="sponsor@company.com">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Target Event</label>
+        <select class="form-select" id="spInvEventId"></select>
+      </div>
+      <div class="form-group"><label class="form-label">Sponsorship Tier Offered</label>
+        <select class="form-select" id="spInvTier">
+          <option value="platinum">🥇 Platinum</option>
+          <option value="gold" selected>🥈 Gold</option>
+          <option value="silver">🥉 Silver</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Suggested Sponsorship Amount (₱)</label>
+      <input type="number" class="form-input" id="spInvAmount" placeholder="e.g. 10000" min="500">
+    </div>
+    <div class="form-group"><label class="form-label">Requirements / What Sponsor Gets</label>
+      <textarea class="form-textarea" id="spInvRequirements" placeholder="e.g. Logo on event posters and banners, booth space (10×10ft), speaking slot, social media mentions…" style="min-height:90px"></textarea>
+    </div>
+    <div class="form-group"><label class="form-label">Additional Message</label>
+      <textarea class="form-textarea" id="spInvMessage" placeholder="Personal invitation message to the sponsor..." style="min-height:72px"></textarea>
+    </div>
+    <button class="btn-gold" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="sendSponsorInvitation()">💼 Send Sponsor Invitation →</button>
+  </div>
+</div>
+
+<!-- ══════════════════ SCRIPT ══════════════════ -->
+<script>
+// ── DATA STORE ──────────────────────────────────────────────
+const PampangaDB = {
+  events: [
+    { id:1, name:"Ligligan Parul Sampernandu", category:"Festival", date:"2025-12-17", time:"6:00 PM", location:"Bacolor, Pampanga", price:150, image:"🏮", organizer:"Pampanga Tourism Office", ticketsSold:1240, capacity:5000, eco:true, local:true },
+    { id:2, name:"Sisig Food Festival",        category:"Food",     date:"2025-10-20", time:"9:00 AM", location:"Pampanga Capitol Grounds", price:100, image:"🍽️", organizer:"Kulinarya Pampanga", ticketsSold:890, capacity:3000, eco:false, local:true },
+    { id:3, name:"Apung Iru Fluvial Parade",   category:"Cultural", date:"2025-06-23", time:"5:00 AM", location:"Candaba River, Pampanga", price:0,   image:"⛵", organizer:"Diocese of San Fernando", ticketsSold:0, capacity:10000, eco:true, local:true },
+    { id:4, name:"Pampanga Summer Concert",    category:"Concert",  date:"2025-04-15", time:"7:00 PM", location:"SM City Pampanga",         price:500, image:"🎵", organizer:"PH Events Unlimited", ticketsSold:2100, capacity:8000, eco:false, local:false },
+    { id:5, name:"Kulinarya Pampanga Festival",category:"Food",     date:"2025-08-10", time:"8:00 AM", location:"Angeles City Convention",  price:120, image:"👨‍🍳", organizer:"Kulinarya Pampanga", ticketsSold:560, capacity:2000, eco:true, local:true },
+    { id:6, name:"Sinukwan Folk Arts Festival",category:"Cultural", date:"2025-09-05", time:"2:00 PM", location:"San Fernando Heritage Park",price:75,  image:"🎭", organizer:"Pampanga Arts Council", ticketsSold:310, capacity:1500, eco:true, local:true }
+  ]
+};
+
+// ── EXTENDED BUSINESSES (with type, rating, eco, local) ─────
+const extendedBusinesses = [
+  { id:1,  name:"Kapampangan Sweets Co.",    type:"food",    location:"San Fernando",  contact:"0917-123-4567", rating:4.8, isEco:true,  isLocal:true,  verified:true,  description:"Award-winning traditional Kapampangan sweets and kakanin." },
+  { id:2,  name:"Aling Clara's Kitchen",     type:"food",    location:"Angeles City",  contact:"0918-234-5678", rating:4.6, isEco:false, isLocal:true,  verified:true,  description:"Authentic Pampanga home-cooked meals and catering." },
+  { id:3,  name:"San Fernando Crafts",       type:"sponsor", location:"San Fernando",  contact:"0919-345-6789", rating:4.5, isEco:true,  isLocal:true,  verified:true,  description:"Heritage arts and crafts, proud community sponsor." },
+  { id:4,  name:"Heritage Bakers PH",        type:"food",    location:"Mabalacat",     contact:"0920-456-7890", rating:4.2, isEco:false, isLocal:true,  verified:false, description:"Premium baked goods and traditional pastries." },
+  { id:5,  name:"Green Warriors PH",         type:"waste",   location:"San Fernando",  contact:"0921-567-8901", rating:4.9, isEco:true,  isLocal:true,  verified:true,  description:"Zero-waste event specialists. 5 years of festival clean-up experience." },
+  { id:6,  name:"EcoClean Solutions",        type:"waste",   location:"Angeles City",  contact:"0922-678-9012", rating:4.7, isEco:true,  isLocal:false, verified:true,  description:"Certified waste management and recycling for large-scale events." },
+  { id:7,  name:"ABC Corporation",           type:"sponsor", location:"Clark Freeport", contact:"0923-789-0123", rating:4.0, isEco:false, isLocal:false, verified:true,  description:"Full-service corporate sponsor with media reach." },
+  { id:8,  name:"Local SME Partners",        type:"sponsor", location:"Pampanga-wide", contact:"0924-890-1234", rating:4.3, isEco:true,  isLocal:true,  verified:false, description:"Network of local small businesses supporting community events." },
+  { id:9,  name:"Hotel Midori Clark",        type:"hotel",   location:"Clark, Pampanga",contact:"0925-901-2345", rating:4.7, isEco:true,  isLocal:false, verified:true,  description:"4-star hotel. Group booking packages for event attendees." },
+  { id:10, name:"Pampanga Grand Inn",        type:"hotel",   location:"San Fernando",  contact:"0926-012-3456", rating:4.4, isEco:false, isLocal:true,  verified:true,  description:"Central location, affordable rates for event guests." },
+  { id:11, name:"Sisig Masters Co.",         type:"food",    location:"Angeles City",  contact:"0927-123-4567", rating:4.5, isEco:false, isLocal:true,  verified:true,  description:"Pampanga's premier sisig and street food stall operator." },
+  { id:12, name:"Nature's Disposal PH",      type:"waste",   location:"Mabalacat",     contact:"0928-234-5678", rating:4.1, isEco:true,  isLocal:true,  verified:false, description:"Composting and biodegradable waste specialists." }
+];
+
+// ── STORAGE ──────────────────────────────────────────────────
+const Storage = {
+  get:    (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set:    (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  remove: (k) => localStorage.removeItem(k)
+};
+
+function getOrgEvents()   { return Storage.get('org_events')        || []; }
+function saveOrgEvents(d) { Storage.set('org_events', d); }
+
+function getAnnouncements()   { return Storage.get('org_announcements') || []; }
+function saveAnnouncements(d) { Storage.set('org_announcements', d); }
+
+function getPubAnnouncements()   { return Storage.get('pub_announcements') || []; }
+function savePubAnnouncements(d) { Storage.set('pub_announcements', d); }
+
+function getPubApplications()   { return Storage.get('pub_applications') || []; }
+
+function getInvitations()   { return Storage.get('org_invitations') || []; }
+function saveInvitations(d) { Storage.set('org_invitations', d); }
+
+function getApplications()   { return Storage.get('org_applications') || sampleApplications(); }
+function saveApplications(d) { Storage.set('org_applications', d); }
+
+function sampleApplications() {
+  return [
+    { id:1, type:"sponsor",  companyName:"NextGen Media PH",    contact:"0911-222-3333", email:"info@nextgenmedia.ph",  details:"Full media sponsor for cultural events. Offering ₱80,000 sponsorship with social media coverage.", status:"pending",  submittedDate:"2025-03-01", capabilities:"Social media, print ads, live streaming" },
+    { id:2, type:"food",     companyName:"Kapampangan Bites",   contact:"0912-333-4444", email:"hello@kapambites.com",  details:"Food stall specializing in authentic Kapampangan appetizers and snacks. 5 years festival experience.", status:"pending",  submittedDate:"2025-03-05", capabilities:"20+ food varieties, 2 portable stalls" },
+    { id:3, type:"waste",    companyName:"CleanFest Team",      contact:"0913-444-5555", email:"clean@cleanfest.ph",    details:"10-member certified waste management team. Experience with festivals of 5,000+ capacity.", status:"pending",  submittedDate:"2025-03-08", capabilities:"Sorting, composting, haul-away services" },
+    { id:4, type:"hotel",    companyName:"Pampanga Suites",     contact:"0914-555-6666", email:"groups@pamsuites.com",  details:"50-room boutique hotel near festival grounds. Offering group rates for event attendees.", status:"accepted", submittedDate:"2025-02-20", capabilities:"50 rooms, shuttle service, event packages" },
+    { id:5, type:"sponsor",  companyName:"Old Brand Tobacco",   contact:"0915-666-7777", email:"promo@oldbrand.ph",     details:"Tobacco product sponsorship.", status:"rejected", submittedDate:"2025-02-15", capabilities:"Logo placement, flyers" },
+    { id:6, type:"food",     companyName:"Street Eats PH",      contact:"0916-777-8888", email:"order@streeteats.ph",   details:"Modern Filipino street food. Fully compliant with sanitation requirements.", status:"pending",  submittedDate:"2025-03-10", capabilities:"5 stalls, cashless payments, eco packaging" }
+  ];
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const ex = document.querySelector('.toast');
+  if (ex) ex.remove();
+  const icons = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||icons.info}</span><span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('open'); document.body.style.overflow = 'hidden'; } }
+function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('open'); document.body.style.overflow = ''; } }
+document.addEventListener('click', e => { if (e.target.classList.contains('modal-overlay')) { e.target.classList.remove('open'); document.body.style.overflow = ''; } });
+
+// ── PAGE NAV ──────────────────────────────────────────────────
+const PAGE_TITLES = {
+  orgOverview:'Overview', orgEvents:'My Events', orgAnnouncements:'Announcements & Business Calls',
+  orgInvitations:'Invitations', orgBusinesses:'Businesses', orgApplications:'Applications',
+  orgAnalytics:'Analytics', orgSettings:'Settings', orgSponsors:'Sponsor Invitations',
+  orgAccommodations:'Accommodations'
+};
+function showPage(id) {
+  document.querySelectorAll('.dashboard-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link[data-page]').forEach(l => l.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) page.classList.add('active');
+  const link = document.querySelector(`.sidebar-link[data-page="${id}"]`);
+  if (link) link.classList.add('active');
+  document.getElementById('pageTitle').textContent = PAGE_TITLES[id] || id;
+  if (id === 'orgOverview')      renderOverview();
+  if (id === 'orgEvents')        renderEventsTable();
+  if (id === 'orgAnnouncements') { renderAnnouncementsList(); renderPublicAnnList(); }
+  if (id === 'orgInvitations')   renderInvitationsTable('all');
+  if (id === 'orgBusinesses')    renderBusinessGrid('all');
+  if (id === 'orgApplications')  renderApplicationsList('all');
+  if (id === 'orgAnalytics')     renderAnalytics();
+  if (id === 'orgSponsors')      renderSponsorInvites('all');
+  if (id === 'orgAccommodations') renderAccommodations();
+}
+document.querySelectorAll('.sidebar-link[data-page]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    showPage(btn.dataset.page);
+    if (window.innerWidth < 768) document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// ── HELPERS ───────────────────────────────────────────────────
+function stars(r) { const full = Math.floor(r); let s = ''; for(let i=0;i<5;i++) s += i<full?'★':'☆'; return `<span class="stars">${s}</span> <span style="font-size:0.72rem;color:var(--sage)">${r.toFixed(1)}</span>`; }
+function typeLabel(t) { const m = {food:'🍽️ Food Stall', waste:'♻️ Waste Mgmt', sponsor:'🏢 Sponsor', hotel:'🏨 Hotel'}; return m[t]||t; }
+function typeBadge(t) { return `<span class="badge badge-${t}">${typeLabel(t)}</span>`; }
+function statusBadge(s) { const m={pending:'⏳ Pending',accepted:'✅ Accepted',rejected:'❌ Rejected'}; return `<span class="badge badge-${s}">${m[s]||s}</span>`; }
+function formatDate(d) { if(!d) return '—'; try { return new Date(d).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}); } catch { return d; } }
+function nextId(arr) { return arr.length ? Math.max(...arr.map(x=>x.id))+1 : 1; }
+
+// ── POPULATE EVENT SELECTS ────────────────────────────────────
+function populateEventSelects() {
+  const all = [...PampangaDB.events, ...getOrgEvents()];
+  ['annEventId','invEventId','spInvEventId','accomEventPicker','pubAnnEventId'].forEach(sid => {
+    const sel = document.getElementById(sid);
+    if (!sel) return;
+    const placeholder = sid === 'accomEventPicker' ? '<option value="">— Select an event —</option>' : '';
+    sel.innerHTML = placeholder + all.map(e => `<option value="${e.id}">${e.image} ${e.name}</option>`).join('');
+  });
+  const bizSel = document.getElementById('invBizId');
+  if (bizSel) {
+    bizSel.innerHTML = '<option value="">— Choose a business —</option>' +
+      extendedBusinesses.map(b => `<option value="${b.id}">${typeLabel(b.type)} — ${b.name}</option>`).join('');
+  }
+}
+
+// ── OVERVIEW ──────────────────────────────────────────────────
+function renderOverview() {
+  const orgEvts = getOrgEvents();
+  const anns    = getAnnouncements();
+  const invites = getInvitations();
+  const apps    = getApplications();
+
+  const totalTickets = orgEvts.reduce((a,e)=>a+(e.ticketsSold||0),0);
+  const pending = apps.filter(a=>a.status==='pending').length;
+  const activeInv = invites.filter(i=>i.status==='pending').length;
+
+  document.getElementById('statMyEvents').textContent = orgEvts.length;
+  document.getElementById('statTicketsSold').textContent = totalTickets;
+  document.getElementById('statPendingApps').textContent = pending;
+  document.getElementById('statActiveInvites').textContent = activeInv;
+
+  // recent events
+  const evList = document.getElementById('overviewEventsList');
+  if (!orgEvts.length) { evList.innerHTML = '<p style="font-size:0.8rem;color:var(--sage)">No events yet. <button class="btn-ghost btn-sm inline-empty-cta" onclick="openModal(\'createEventModal\')">Create one →</button></p>'; }
+  else {
+    evList.innerHTML = orgEvts.slice(-3).reverse().map(e => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid rgba(212,146,10,0.08)">
+        <div><div style="font-weight:700;font-size:0.82rem">${e.image||'🎪'} ${e.name}</div><div style="font-size:0.7rem;color:var(--sage)">${formatDate(e.date)} · ${e.location||'—'}</div></div>
+        <div style="font-size:0.72rem;color:var(--gold);font-weight:700">${e.ticketsSold||0}/${e.capacity||'?'}</div>
+      </div>`).join('');
+  }
+
+  // recent announcements
+  const annList = document.getElementById('overviewAnnouncementsList');
+  if (!anns.length) { annList.innerHTML = '<p style="font-size:0.8rem;color:var(--sage)">No announcements yet.</p>'; }
+  else {
+    annList.innerHTML = anns.slice(-3).reverse().map(a => `
+      <div style="padding:0.6rem 0;border-bottom:1px solid rgba(212,146,10,0.08)">
+        <div style="font-weight:700;font-size:0.82rem">${a.title}</div>
+        <div style="font-size:0.7rem;color:var(--sage)">${formatDate(a.createdAt)} · ${a.audience==='all'?'All Attendees':a.audience}</div>
+      </div>`).join('');
+  }
+
+  // pending apps
+  const pendList = document.getElementById('overviewPendingList');
+  const pendApps = apps.filter(a=>a.status==='pending').slice(0,3);
+  if (!pendApps.length) { pendList.innerHTML = '<p style="font-size:0.8rem;color:var(--sage)">No pending applications.</p>'; }
+  else {
+    pendList.innerHTML = pendApps.map(a => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid rgba(212,146,10,0.08)">
+        <div><div style="font-weight:700;font-size:0.82rem">${a.companyName}</div><div style="font-size:0.7rem;color:var(--sage)">${typeLabel(a.type)}</div></div>
+        <div style="display:flex;gap:0.4rem">
+          <button class="btn-success" style="padding:0.25rem 0.6rem;font-size:0.65rem" onclick="quickAccept(${a.id})">✅</button>
+          <button class="btn-danger"  style="padding:0.25rem 0.6rem;font-size:0.65rem" onclick="quickReject(${a.id})">❌</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ── MY EVENTS TABLE ───────────────────────────────────────────
+function renderEventsTable() {
+  const events = getOrgEvents();
+  const tbody = document.getElementById('eventsTableBody');
+  if (!events.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--sage)">No events yet. <button class="btn-fire btn-sm inline-empty-cta" onclick="openModal('createEventModal')">Create your first event →</button></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = events.map(e => {
+    const pct = e.capacity ? Math.round((e.ticketsSold||0)/e.capacity*100) : 0;
+    const rev = (e.ticketsSold||0) * (e.price||0);
+    return `<tr>
+      <td><strong>${e.image||'🎪'} ${e.name}</strong><br><span style="font-size:0.7rem;color:var(--sage)">${e.location||'—'}</span></td>
+      <td><span class="badge badge-food" style="text-transform:none">${e.category}</span></td>
+      <td>${formatDate(e.date)}</td>
+      <td>
+        <div style="font-weight:700">${e.ticketsSold||0} / ${e.capacity||'—'}</div>
+        <div class="progress-bar" style="margin-top:4px;width:80px"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </td>
+      <td style="font-weight:700;color:var(--moss)">₱${rev.toLocaleString()}</td>
+      <td>${e.eco ? '<span class="badge badge-eco">🌿 Eco</span>' : ''} ${e.local ? '<span class="badge badge-local">📍 Local</span>' : ''}</td>
+      <td style="display:flex;gap:0.4rem;flex-wrap:wrap">
+        <button class="btn-ghost btn-sm" onclick="editEvent(${e.id})">✏️ Edit</button>
+        <button class="btn-danger" onclick="deleteEvent(${e.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── SAVE EVENT ────────────────────────────────────────────────
+function saveEvent() {
+  const name     = document.getElementById('evtName').value.trim();
+  const category = document.getElementById('evtCategory').value;
+  const price    = parseInt(document.getElementById('evtPrice').value)||0;
+  const date     = document.getElementById('evtDate').value;
+  const time     = document.getElementById('evtTime').value;
+  const location = document.getElementById('evtLocation').value.trim();
+  const capacity = parseInt(document.getElementById('evtCapacity').value)||0;
+  const emoji    = document.getElementById('evtEmoji').value.trim()||'🎪';
+  const desc     = document.getElementById('evtDesc').value.trim();
+  const eco      = document.getElementById('evtEco').value === 'true';
+  const local    = document.getElementById('evtLocal').value === 'true';
+  if (!name || !date || !location) { showToast('Please fill in name, date, and location.','warning'); return; }
+
+  const events = getOrgEvents();
+  const editId = parseInt(document.getElementById('editEventId').value)||0;
+  if (editId) {
+    const idx = events.findIndex(e => e.id === editId);
+    if (idx !== -1) { events[idx] = { ...events[idx], name, category, price, date, time, location, capacity, image:emoji, description:desc, eco, local }; }
+    showToast(`✅ Event "${name}" updated!`, 'success');
+  } else {
+    events.push({ id: nextId(events), name, category, price, date, time, location, capacity, image:emoji, description:desc, eco, local, ticketsSold:0, organizer: document.getElementById('sidebarNameOrg').textContent });
+    showToast(`🎪 Event "${name}" created!`, 'success');
+  }
+  saveOrgEvents(events);
+  closeModal('createEventModal');
+  renderEventsTable();
+  renderOverview();
+  populateEventSelects();
+}
+
+function editEvent(id) {
+  const e = getOrgEvents().find(ev => ev.id === id);
+  if (!e) return;
+  document.getElementById('createEventModalTitle').textContent = '✏️ Edit Event';
+  document.getElementById('editEventId').value   = e.id;
+  document.getElementById('evtName').value       = e.name;
+  document.getElementById('evtCategory').value   = e.category;
+  document.getElementById('evtPrice').value      = e.price||0;
+  document.getElementById('evtDate').value       = e.date||'';
+  document.getElementById('evtTime').value       = e.time||'';
+  document.getElementById('evtLocation').value   = e.location||'';
+  document.getElementById('evtCapacity').value   = e.capacity||'';
+  document.getElementById('evtEmoji').value      = e.image||'🎪';
+  document.getElementById('evtDesc').value       = e.description||'';
+  document.getElementById('evtEco').value        = e.eco ? 'true' : 'false';
+  document.getElementById('evtLocal').value      = e.local ? 'true' : 'false';
+  openModal('createEventModal');
+}
+
+function deleteEvent(id) {
+  if (!confirm('Delete this event?')) return;
+  const events = getOrgEvents().filter(e => e.id !== id);
+  saveOrgEvents(events);
+  renderEventsTable();
+  renderOverview();
+  populateEventSelects();
+  showToast('Event deleted.', 'info');
+}
+
+// ── ANNOUNCEMENTS ──────────────────────────────────────────────
+function postAnnouncement() {
+  const title    = document.getElementById('annTitle').value.trim();
+  const eventId  = parseInt(document.getElementById('annEventId').value);
+  const priority = document.getElementById('annPriority').value;
+  const audience = document.getElementById('annAudience').value;
+  const message  = document.getElementById('annMessage').value.trim();
+  if (!title || !message) { showToast('Title and message are required.','warning'); return; }
+
+  const allEvts = [...PampangaDB.events, ...getOrgEvents()];
+  const ev = allEvts.find(e => e.id === eventId);
+  const anns = getAnnouncements();
+  anns.push({ id: nextId(anns), title, eventId, eventName: ev ? ev.name : '—', priority, audience, message, createdAt: new Date().toISOString(), engagementCount:0 });
+  saveAnnouncements(anns);
+
+  closeModal('postAnnouncementModal');
+  ['annTitle','annMessage'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  renderAnnouncementsList();
+  renderOverview();
+  showToast(`📢 Announcement "${title}" posted!`, 'success');
+}
+
+function renderAnnouncementsList() {
+  const anns = getAnnouncements();
+  const container = document.getElementById('announcementsList');
+  if (!anns.length) { container.innerHTML = '<div class="alert alert-info">ℹ️ No announcements yet. Click "Post Announcement" to create one.</div>'; return; }
+  const priorityIcon = { urgent:'🔴', important:'🟡', normal:'🔵' };
+  container.innerHTML = anns.slice().reverse().map(a => `
+    <div class="card-box" style="padding:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem">
+            <span>${priorityIcon[a.priority]||'🔵'}</span>
+            <strong style="font-size:0.95rem">${a.title}</strong>
+            <span class="badge badge-${a.priority==='urgent'?'rejected':a.priority==='important'?'pending':'accepted'}" style="font-size:0.6rem">${a.priority.toUpperCase()}</span>
+          </div>
+          <div style="font-size:0.75rem;color:var(--sage);margin-bottom:0.6rem">🎪 ${a.eventName} · 👥 ${a.audience==='all'?'All Attendees':a.audience} · 📅 ${formatDate(a.createdAt)}</div>
+          <p style="font-size:0.82rem;color:var(--charcoal);line-height:1.55">${a.message}</p>
+        </div>
+        <button class="btn-danger" onclick="deleteAnnouncement(${a.id})">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteAnnouncement(id) {
+  if (!confirm('Delete this announcement?')) return;
+  saveAnnouncements(getAnnouncements().filter(a => a.id !== id));
+  renderAnnouncementsList();
+  renderOverview();
+  showToast('Announcement deleted.', 'info');
+}
+
+// ── PUBLIC ANNOUNCEMENTS ─────────────────────────────────────
+let currentAnnTab = 'businessCalls';
+
+function switchAnnTab(tab) {
+  currentAnnTab = tab;
+  document.querySelectorAll('#annTypeTabs .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.anntype === tab));
+  document.getElementById('annTab_businessCalls').style.display       = tab === 'businessCalls' ? '' : 'none';
+  document.getElementById('annTab_eventAnnouncements').style.display  = tab === 'eventAnnouncements' ? '' : 'none';
+  if (tab === 'businessCalls') renderPublicAnnList();
+  if (tab === 'eventAnnouncements') renderAnnouncementsList();
+}
+window.switchAnnTab = switchAnnTab;
+
+function renderPublicAnnList() {
+  const anns = getPubAnnouncements();
+  const apps = getPubApplications();
+  const container = document.getElementById('publicAnnList');
+  if (!container) return;
+  if (!anns.length) {
+    container.innerHTML = '<div class="alert alert-info">ℹ️ No business calls yet. Click "Create Business Call" to post one.</div>';
+    return;
+  }
+  const statusStyle = s => {
+    if (s === 'Open for Applications') return 'background:rgba(27,58,45,0.12);color:var(--moss);border:1px solid rgba(107,158,122,0.25)';
+    if (s === 'Invitations Sent') return 'background:rgba(212,146,10,0.15);color:#7A5500;border:1px solid rgba(212,146,10,0.3)';
+    return 'background:rgba(42,21,21,0.07);color:rgba(42,21,21,0.45);border:1px solid rgba(42,21,21,0.1)';
+  };
+  container.innerHTML = anns.slice().reverse().map(a => {
+    const appCount = apps.filter(x => x.annId === a.id).length + a.applicantBusinessIds.length;
+    return `
+    <div class="card-box" style="padding:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.75rem">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;margin-bottom:0.4rem">
+            <span style="font-size:1.3rem">${a.bannerEmoji}</span>
+            <strong style="font-size:0.95rem">${a.title}</strong>
+            <span style="${statusStyle(a.status)};font-size:0.6rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:20px">${a.status}</span>
+            ${a.featured ? '<span style="background:rgba(212,146,10,0.15);color:#7A5500;font-size:0.58rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.18rem 0.5rem;border-radius:4px;border:1px solid rgba(212,146,10,0.25)">⭐ FEATURED</span>' : ''}
+          </div>
+          <div style="font-size:0.75rem;color:var(--sage);margin-bottom:0.5rem">🎪 ${a.eventName} · 📅 Deadline: ${formatDate(a.deadline)} · 📊 ${appCount} application${appCount!==1?'s':''}</div>
+          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.8">${a.content.slice(0,120)}${a.content.length>120?'…':''}</div>
+        </div>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:flex-start">
+          <button class="btn-gold btn-sm" onclick="editPublicAnn(${a.id})">✏️ Edit</button>
+          <button class="btn-eco btn-sm" onclick="openViewApps(${a.id})">👥 Applications (${appCount})</button>
+          ${a.status !== 'Closed' ? `<button class="btn-danger btn-sm" onclick="closePublicAnn(${a.id})">🔒 Close</button>` : ''}
+          <button class="btn-danger btn-sm" onclick="deletePublicAnn(${a.id})">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.renderPublicAnnList = renderPublicAnnList;
+
+function savePublicAnnouncement() {
+  const title    = document.getElementById('pubAnnTitle').value.trim();
+  const eventId  = parseInt(document.getElementById('pubAnnEventId').value);
+  const status   = document.getElementById('pubAnnStatus').value;
+  const content  = document.getElementById('pubAnnContent').value.trim();
+  const deadline = document.getElementById('pubAnnDeadline').value;
+  const emoji    = document.getElementById('pubAnnEmoji').value.trim() || '📢';
+  const featured = document.getElementById('pubAnnFeatured').checked;
+  const editId   = document.getElementById('pubAnnEditId').value;
+  const types    = Array.from(document.querySelectorAll('input[name="pubAnnType"]:checked')).map(c => c.value);
+  if (!title) { showToast('Please enter a title.', 'error'); return; }
+  if (!content) { showToast('Please enter a description.', 'error'); return; }
+  const all    = [...PampangaDB.events, ...getOrgEvents()];
+  const ev     = all.find(e => e.id === eventId) || { name: 'Unknown Event' };
+  const anns   = getPubAnnouncements();
+  if (editId) {
+    const idx = anns.findIndex(a => a.id === parseInt(editId));
+    if (idx > -1) {
+      anns[idx] = { ...anns[idx], title, eventId, eventName: ev.name, status, content, deadline, bannerEmoji: emoji, featured, businessTypesNeeded: types };
+    }
+  } else {
+    anns.push({
+      id: anns.length ? Math.max(...anns.map(a => a.id)) + 1 : 1,
+      eventId, eventName: ev.name,
+      organizerId: 1, organizerName: 'Organizer',
+      title, content, businessTypesNeeded: types, status,
+      createdAt: new Date().toISOString().split('T')[0],
+      deadline, applicantBusinessIds: [], invitedBusinessIds: [], acceptedBusinessIds: [],
+      bannerEmoji: emoji, featured
+    });
+  }
+  savePubAnnouncements(anns);
+  closeModal('createPublicAnnModal');
+  renderPublicAnnList();
+  showToast(`📢 Business call "${title}" saved!`, 'success');
+  document.getElementById('pubAnnEditId').value = '';
+}
+window.savePublicAnnouncement = savePublicAnnouncement;
+
+function editPublicAnn(id) {
+  const ann = getPubAnnouncements().find(a => a.id === id);
+  if (!ann) return;
+  populateEventSelects();
+  document.getElementById('pubAnnEditId').value   = id;
+  document.getElementById('pubAnnTitle').value    = ann.title;
+  document.getElementById('pubAnnEventId').value  = ann.eventId;
+  document.getElementById('pubAnnStatus').value   = ann.status;
+  document.getElementById('pubAnnContent').value  = ann.content;
+  document.getElementById('pubAnnDeadline').value = ann.deadline;
+  document.getElementById('pubAnnEmoji').value    = ann.bannerEmoji;
+  document.getElementById('pubAnnFeatured').checked = ann.featured;
+  document.querySelectorAll('input[name="pubAnnType"]').forEach(cb => {
+    cb.checked = ann.businessTypesNeeded.includes(cb.value);
+  });
+  openModal('createPublicAnnModal');
+}
+window.editPublicAnn = editPublicAnn;
+
+function closePublicAnn(id) {
+  const anns = getPubAnnouncements();
+  const ann  = anns.find(a => a.id === id);
+  if (ann) { ann.status = 'Closed'; savePubAnnouncements(anns); renderPublicAnnList(); showToast('Announcement closed.', 'info'); }
+}
+window.closePublicAnn = closePublicAnn;
+
+function deletePublicAnn(id) {
+  if (!confirm('Delete this business call?')) return;
+  savePubAnnouncements(getPubAnnouncements().filter(a => a.id !== id));
+  renderPublicAnnList();
+  showToast('Business call deleted.', 'info');
+}
+window.deletePublicAnn = deletePublicAnn;
+
+function openViewApps(id) {
+  const ann  = getPubAnnouncements().find(a => a.id === id);
+  if (!ann) return;
+  const apps = getPubApplications().filter(a => a.annId === id);
+  document.getElementById('viewAnnAppsTitle').textContent = `📋 Applications — ${ann.title}`;
+  const allApplicantIds = [...new Set([...ann.applicantBusinessIds, ...apps.map(a => a.businessId)])];
+  if (!allApplicantIds.length) {
+    document.getElementById('viewAnnAppsContent').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--sage);font-size:0.85rem">No applications yet.</div>';
+  } else {
+    document.getElementById('viewAnnAppsContent').innerHTML = `
+      <div style="font-size:0.78rem;color:var(--sage);margin-bottom:1rem">${allApplicantIds.length} applicant(s) · Deadline: ${formatDate(ann.deadline)}</div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem">
+        ${allApplicantIds.map(bizId => {
+          const biz  = extendedBusinesses.find(b => b.id === bizId);
+          const name = biz ? biz.name : `Business #${bizId}`;
+          const type = biz ? typeLabel(biz.type) : '—';
+          const accepted = ann.acceptedBusinessIds.includes(bizId);
+          return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;padding:0.75rem;background:rgba(251,244,232,0.5);border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+            <div><div style="font-weight:700;font-size:0.88rem">${name}</div><div style="font-size:0.7rem;color:var(--sage)">${type}</div></div>
+            <div style="display:flex;gap:0.4rem">
+              ${accepted
+                ? '<span style="font-size:0.72rem;font-weight:700;color:var(--moss)">✅ Accepted</span>'
+                : `<button class="btn-eco btn-sm" onclick="acceptAnnApplicant(${id},${bizId})">Accept</button>
+                   <button class="btn-danger btn-sm" onclick="rejectAnnApplicant(${id},${bizId})">Reject</button>`}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+  openModal('viewAnnApplicationsModal');
+}
+window.openViewApps = openViewApps;
+
+function acceptAnnApplicant(annId, bizId) {
+  const anns = getPubAnnouncements();
+  const ann  = anns.find(a => a.id === annId);
+  if (!ann) return;
+  if (!ann.acceptedBusinessIds.includes(bizId)) ann.acceptedBusinessIds.push(bizId);
+  savePubAnnouncements(anns);
+  openViewApps(annId);
+  showToast('Applicant accepted!', 'success');
+}
+window.acceptAnnApplicant = acceptAnnApplicant;
+
+function rejectAnnApplicant(annId, bizId) {
+  const anns = getPubAnnouncements();
+  const ann  = anns.find(a => a.id === annId);
+  if (!ann) return;
+  ann.applicantBusinessIds = ann.applicantBusinessIds.filter(id => id !== bizId);
+  savePubAnnouncements(anns);
+  openViewApps(annId);
+  showToast('Applicant removed.', 'info');
+}
+window.rejectAnnApplicant = rejectAnnApplicant;
+
+// ── INVITATIONS ────────────────────────────────────────────────
+let currentInviteFilter = 'all';
+
+function sendInvitation() {
+  const bizId   = parseInt(document.getElementById('invBizId').value);
+  const bizType = document.getElementById('invBizType').value;
+  const eventId = parseInt(document.getElementById('invEventId').value);
+  const terms   = document.getElementById('invTerms').value.trim();
+  if (!bizId) { showToast('Please select a business.','warning'); return; }
+
+  const biz = extendedBusinesses.find(b => b.id === bizId);
+  const allEvts = [...PampangaDB.events, ...getOrgEvents()];
+  const ev  = allEvts.find(e => e.id === eventId);
+
+  const invites = getInvitations();
+  invites.push({ id: nextId(invites), bizId, bizName: biz ? biz.name : '?', bizType, eventId, eventName: ev ? ev.name : '?', terms, sentDate: new Date().toISOString(), status:'pending' });
+  saveInvitations(invites);
+
+  closeModal('sendInviteModal');
+  document.getElementById('invTerms').value = '';
+  renderInvitationsTable(currentInviteFilter);
+  renderOverview();
+  showToast(`✉️ Invitation sent to ${biz ? biz.name : 'business'}!`, 'success');
+}
+
+function renderInvitationsTable(filterType) {
+  currentInviteFilter = filterType;
+  document.querySelectorAll('#inviteFilterTabs .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.type === filterType));
+  let invites = getInvitations();
+  if (filterType !== 'all') invites = invites.filter(i => i.bizType === filterType);
+  const tbody = document.getElementById('invitationsTableBody');
+  if (!invites.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--sage)">No invitations ${filterType!=='all'?'of this type ':'' }yet. <button class="btn-gold btn-sm inline-empty-cta" onclick="openModal('sendInviteModal')">Send one →</button></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = invites.slice().reverse().map(inv => `<tr>
+    <td><strong>${inv.bizName}</strong></td>
+    <td>${typeBadge(inv.bizType)}</td>
+    <td style="font-size:0.78rem">${inv.eventName}</td>
+    <td style="font-size:0.75rem;color:var(--sage)">${formatDate(inv.sentDate)}</td>
+    <td>${statusBadge(inv.status)}</td>
+    <td style="display:flex;gap:0.4rem">
+      ${inv.status==='pending'?`<button class="btn-success" onclick="updateInviteStatus(${inv.id},'accepted')">✅ Accept</button><button class="btn-danger" onclick="updateInviteStatus(${inv.id},'rejected')">❌ Reject</button>`:'<span style="font-size:0.75rem;color:var(--sage)">Resolved</span>'}
+    </td>
+  </tr>`).join('');
+}
+
+function updateInviteStatus(id, status) {
+  const invites = getInvitations();
+  const i = invites.findIndex(v => v.id === id);
+  if (i !== -1) invites[i].status = status;
+  saveInvitations(invites);
+  renderInvitationsTable(currentInviteFilter);
+  renderOverview();
+  showToast(`Invitation ${status}.`, status==='accepted'?'success':'info');
+}
+
+document.querySelectorAll('#inviteFilterTabs .filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => renderInvitationsTable(btn.dataset.type));
+});
+
+// ── BUSINESSES ─────────────────────────────────────────────────
+let currentBizFilter = 'all';
+
+function setBizFilter(type) {
+  currentBizFilter = type;
+  document.querySelectorAll('#bizFilterTabs .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.type === type));
+  filterBusinesses();
+}
+
+function filterBusinesses() {
+  const q = (document.getElementById('bizSearch').value||'').toLowerCase();
+  let list = [...extendedBusinesses];
+  // sort: eco+local first, then by rating
+  list.sort((a,b) => {
+    const scoreA = (a.isEco?2:0) + (a.isLocal?1:0) + a.rating;
+    const scoreB = (b.isEco?2:0) + (b.isLocal?1:0) + b.rating;
+    return scoreB - scoreA;
+  });
+  if (currentBizFilter !== 'all') list = list.filter(b => b.type === currentBizFilter);
+  if (q) list = list.filter(b => b.name.toLowerCase().includes(q) || b.location.toLowerCase().includes(q) || b.description.toLowerCase().includes(q));
+  renderBusinessGrid(null, list);
+}
+
+function renderBusinessGrid(filterType, prefiltered) {
+  if (filterType !== null && filterType !== undefined) { currentBizFilter = filterType; }
+  const list = prefiltered !== undefined ? prefiltered : (() => {
+    let l = [...extendedBusinesses];
+    l.sort((a,b) => ((b.isEco?2:0)+(b.isLocal?1:0)+b.rating) - ((a.isEco?2:0)+(a.isLocal?1:0)+a.rating));
+    if (currentBizFilter !== 'all') l = l.filter(b => b.type === currentBizFilter);
+    return l;
+  })();
+
+  const grid = document.getElementById('businessGrid');
+  if (!list.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sage)">No businesses found.</div>'; return; }
+
+  grid.innerHTML = list.map((b,i) => `
+    <div class="card-box anim d${(i%4)+1}" style="position:relative;padding:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+        <div style="font-size:2rem">${{food:'🍽️',waste:'♻️',sponsor:'🏢',hotel:'🏨'}[b.type]||'🏢'}</div>
+        <div style="display:flex;gap:0.3rem;flex-wrap:wrap">
+          ${b.isEco?'<span class="badge badge-eco">🌿 Eco</span>':''}
+          ${b.isLocal?'<span class="badge badge-local">📍 Local</span>':''}
+          ${b.verified?'<span class="badge badge-accepted">✓ Verified</span>':''}
+        </div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.2rem">${b.name}</div>
+      <div style="font-size:0.72rem;color:var(--sage);margin-bottom:0.35rem">📍 ${b.location}</div>
+      <div style="margin-bottom:0.5rem">${stars(b.rating)}</div>
+      <p style="font-size:0.75rem;color:var(--charcoal);line-height:1.5;margin-bottom:0.875rem">${b.description}</p>
+      <div style="font-size:0.72rem;color:var(--sage);margin-bottom:0.875rem">📞 ${b.contact}</div>
+      <div style="display:flex;gap:0.4rem">
+        ${typeBadge(b.type)}
+        <button class="btn-gold btn-sm" style="margin-left:auto" onclick="quickInvite(${b.id})">✉️ Invite</button>
+      </div>
+    </div>`).join('');
+}
+
+function quickInvite(bizId) {
+  populateEventSelects();
+  const sel = document.getElementById('invBizId');
+  if (sel) sel.value = bizId;
+  const b = extendedBusinesses.find(x => x.id === bizId);
+  if (b) { const sel2 = document.getElementById('invBizType'); if(sel2) sel2.value = b.type; }
+  openModal('sendInviteModal');
+}
+
+// ── APPLICATIONS ───────────────────────────────────────────────
+let currentAppFilter = 'all';
+
+function setAppFilter(status) {
+  currentAppFilter = status;
+  document.querySelectorAll('#appFilterTabs .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === status));
+  renderApplicationsList(status);
+}
+
+function renderApplicationsList(filterStatus) {
+  let apps = getApplications();
+  if (filterStatus && filterStatus !== 'all') apps = apps.filter(a => a.status === filterStatus);
+  const container = document.getElementById('applicationsList');
+  if (!apps.length) { container.innerHTML = '<div class="alert alert-info">ℹ️ No applications in this category.</div>'; return; }
+  container.innerHTML = apps.map(a => `
+    <div class="card-box" style="padding:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.4rem">
+            <strong style="font-size:1rem">${a.companyName}</strong>
+            ${typeBadge(a.type)} ${statusBadge(a.status)}
+          </div>
+          <div style="font-size:0.75rem;color:var(--sage);margin-bottom:0.5rem">📞 ${a.contact} · ✉️ ${a.email} · 📅 Submitted ${formatDate(a.submittedDate)}</div>
+          <p style="font-size:0.8rem;color:var(--charcoal);line-height:1.55;margin-bottom:0.5rem">${a.details}</p>
+          <div style="font-size:0.75rem;color:var(--sage)"><strong>Capabilities:</strong> ${a.capabilities}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;min-width:120px">
+          <button class="btn-ghost btn-sm" onclick="viewApplication(${a.id})">👁 View Details</button>
+          ${a.status==='pending'?`
+          <button class="btn-success" onclick="updateAppStatus(${a.id},'accepted')">✅ Accept</button>
+          <button class="btn-danger"  onclick="updateAppStatus(${a.id},'rejected')">❌ Reject</button>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function viewApplication(id) {
+  const a = getApplications().find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('viewApplicationContent').innerHTML = `
+    <div style="display:grid;gap:0.75rem">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">${typeBadge(a.type)} ${statusBadge(a.status)}</div>
+      <div><span style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)">Company</span><div style="font-weight:700;font-size:1rem;margin-top:0.2rem">${a.companyName}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+        <div><span style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)">Contact</span><div style="font-size:0.85rem;margin-top:0.2rem">${a.contact}</div></div>
+        <div><span style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)">Email</span><div style="font-size:0.85rem;margin-top:0.2rem">${a.email}</div></div>
+      </div>
+      <div><span style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)">Application Details</span><p style="font-size:0.82rem;line-height:1.6;margin-top:0.35rem;color:var(--charcoal)">${a.details}</p></div>
+      <div><span style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)">Capabilities</span><p style="font-size:0.82rem;margin-top:0.2rem;color:var(--charcoal)">${a.capabilities}</p></div>
+      <div style="font-size:0.75rem;color:var(--sage)">Submitted: ${formatDate(a.submittedDate)}</div>
+    </div>`;
+  document.getElementById('viewApplicationActions').innerHTML = a.status === 'pending' ? `
+    <button class="btn-success" style="flex:1;justify-content:center" onclick="updateAppStatus(${a.id},'accepted');closeModal('viewApplicationModal')">✅ Accept Application</button>
+    <button class="btn-danger"  style="flex:1;justify-content:center" onclick="updateAppStatus(${a.id},'rejected');closeModal('viewApplicationModal')">❌ Reject Application</button>` :
+    `<div style="font-size:0.82rem;color:var(--sage)">This application has been <strong>${a.status}</strong>.</div>`;
+  openModal('viewApplicationModal');
+}
+
+function updateAppStatus(id, status) {
+  const apps = getApplications();
+  const i = apps.findIndex(a => a.id === id);
+  if (i !== -1) apps[i].status = status;
+  saveApplications(apps);
+  renderApplicationsList(currentAppFilter);
+  renderOverview();
+  showToast(`Application ${status}!`, status==='accepted'?'success':'info');
+}
+
+function quickAccept(id) { updateAppStatus(id,'accepted'); }
+function quickReject(id) { updateAppStatus(id,'rejected'); }
+
+// ── ANALYTICS ──────────────────────────────────────────────────
+function renderAnalytics() {
+  const orgEvts  = getOrgEvents();
+  const anns     = getAnnouncements();
+  const invites  = getInvitations();
+
+  const totalTickets  = orgEvts.reduce((a,e)=>a+(e.ticketsSold||0),0);
+  const totalRevenue  = orgEvts.reduce((a,e)=>a+(e.ticketsSold||0)*(e.price||0),0);
+  document.getElementById('anaTickets').textContent       = totalTickets;
+  document.getElementById('anaRevenue').textContent       = '₱'+totalRevenue.toLocaleString();
+  document.getElementById('anaAnnouncements').textContent = anns.length;
+  document.getElementById('anaInvites').textContent       = invites.length;
+
+  // event performance
+  const perfList = document.getElementById('eventPerformanceList');
+  if (!orgEvts.length) { perfList.innerHTML = '<p style="font-size:0.8rem;color:var(--sage)">No events yet.</p>'; }
+  else {
+    perfList.innerHTML = orgEvts.map(e => {
+      const pct = e.capacity ? Math.round((e.ticketsSold||0)/e.capacity*100) : 0;
+      return `<div style="margin-bottom:0.875rem">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.3rem">
+          <span><strong>${e.image} ${e.name}</strong></span>
+          <span style="color:var(--sage)">${e.ticketsSold||0}/${e.capacity||'?'} (${pct}%)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill${e.eco?' eco':''}" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // top invited businesses
+  const topList = document.getElementById('topBusinessesList');
+  const bizCount = {};
+  invites.forEach(inv => { bizCount[inv.bizName] = (bizCount[inv.bizName]||0)+1; });
+  const sorted = Object.entries(bizCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if (!sorted.length) { topList.innerHTML = '<p style="font-size:0.8rem;color:var(--sage)">No invitations sent yet.</p>'; }
+  else {
+    topList.innerHTML = sorted.map(([name,cnt]) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(212,146,10,0.08)">
+        <span style="font-size:0.82rem;font-weight:600">${name}</span>
+        <span class="badge badge-pending">${cnt} invite${cnt>1?'s':''}</span>
+      </div>`).join('');
+  }
+}
+
+// ── SPONSOR INVITATIONS ───────────────────────────────────────
+function getSponsorInvites()   { return Storage.get('org_sponsor_invites') || []; }
+function saveSponsorInvites(d) { Storage.set('org_sponsor_invites', d); }
+
+const tierBadge = (t) => {
+  const m = { platinum:'🥇 Platinum', gold:'🥈 Gold', silver:'🥉 Silver' };
+  const cls = { platinum:'badge-accepted', gold:'badge-pending', silver:'badge-hotel' };
+  return `<span class="badge ${cls[t]||'badge-pending'}">${m[t]||t}</span>`;
+};
+
+function sendSponsorInvitation() {
+  const company = document.getElementById('spInvCompany').value.trim();
+  const contact = document.getElementById('spInvContact').value.trim();
+  const email   = document.getElementById('spInvEmail').value.trim();
+  const eventId = parseInt(document.getElementById('spInvEventId').value);
+  const tier    = document.getElementById('spInvTier').value;
+  const amount  = parseFloat(document.getElementById('spInvAmount').value) || 0;
+  const reqs    = document.getElementById('spInvRequirements').value.trim();
+  const message = document.getElementById('spInvMessage').value.trim();
+
+  if (!company) { showToast('Please enter the company name.','warning'); return; }
+  if (!eventId) { showToast('Please select an event.','warning'); return; }
+
+  const all = [...PampangaDB.events, ...getOrgEvents()];
+  const event = all.find(e=>e.id===eventId);
+  const invites = getSponsorInvites();
+  invites.push({
+    id: nextId(invites), company, contact, email, eventId,
+    eventName: event ? event.name : '?', tier, amount,
+    requirements: reqs, message, sentDate: new Date().toISOString(),
+    status: 'pending', response: ''
+  });
+  saveSponsorInvites(invites);
+  closeModal('sendSponsorInviteModal');
+  // reset
+  ['spInvCompany','spInvContact','spInvEmail','spInvAmount','spInvRequirements','spInvMessage'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  renderSponsorInvites('all');
+  renderOverview();
+  showToast(`💼 Sponsor invitation sent to ${company}!`, 'success');
+}
+
+let currentSponsorFilter = 'all';
+function filterSponsorInvites(status, btn) {
+  currentSponsorFilter = status;
+  document.querySelectorAll('#sponsorInvFilterTabs .filter-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSponsorInvites(status);
+}
+
+function renderSponsorInvites(status) {
+  currentSponsorFilter = status;
+  let invites = getSponsorInvites();
+  if (status !== 'all') invites = invites.filter(i=>i.status===status);
+  const tbody = document.getElementById('sponsorInvTableBody');
+  if (!tbody) return;
+  if (!invites.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--sage)">No sponsor invitations${status!=='all'?' with this status':''} yet. <button class="btn-gold btn-sm inline-empty-cta" onclick="openModal('sendSponsorInviteModal')">Invite a Sponsor →</button></td></tr>`;
+  } else {
+    tbody.innerHTML = invites.slice().reverse().map(inv => `<tr>
+      <td>
+        <div style="font-weight:600;font-size:0.82rem">${inv.company}</div>
+        ${inv.contact?`<div style="font-size:0.72rem;color:var(--sage)">${inv.contact}</div>`:''}
+        ${inv.email?`<div style="font-size:0.7rem;color:var(--sage)">${inv.email}</div>`:''}
+      </td>
+      <td style="font-size:0.78rem">${inv.eventName}</td>
+      <td>${tierBadge(inv.tier)}</td>
+      <td style="font-size:0.82rem;font-weight:700;color:var(--crimson)">${inv.amount?'₱'+Number(inv.amount).toLocaleString():'—'}</td>
+      <td style="font-size:0.75rem;color:var(--sage)">${formatDate(inv.sentDate)}</td>
+      <td style="font-size:0.75rem;color:var(--sage);max-width:140px;white-space:normal">${inv.response||'—'}</td>
+      <td>${statusBadge(inv.status)}</td>
+      <td style="display:flex;gap:0.35rem;flex-wrap:wrap">
+        ${inv.status==='pending'
+          ? `<button class="btn-success" onclick="updateSponsorInviteStatus(${inv.id},'accepted')">✅</button><button class="btn-danger" onclick="updateSponsorInviteStatus(${inv.id},'declined')">❌</button><button class="btn-gold btn-sm" onclick="updateSponsorInviteStatus(${inv.id},'inquired')">🤔</button>`
+          : `<span style="font-size:0.72rem;color:var(--sage)">Resolved</span>`}
+        <button class="btn-ghost btn-sm" onclick="removeSponsorInvite(${inv.id})" title="Delete" style="font-size:0.68rem;padding:0.25rem 0.5rem">🗑</button>
+      </td>
+    </tr>`).join('');
+  }
+  // summary
+  const all = getSponsorInvites();
+  const resp = document.getElementById('sponsorInvResponses');
+  if (resp && all.length) {
+    const accepted = all.filter(i=>i.status==='accepted');
+    const pending  = all.filter(i=>i.status==='pending');
+    const totalCommitted = accepted.reduce((s,i)=>s+Number(i.amount||0),0);
+    resp.innerHTML = `<div class="card-box" style="background:rgba(212,146,10,0.04);border-color:rgba(212,146,10,0.15)">
+      <h3 class="card-title-sm">📊 Sponsorship Summary</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.875rem">
+        <div style="text-align:center;padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--crimson)">${all.length}</div>
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage)">Total Sent</div>
+        </div>
+        <div style="text-align:center;padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:#16a34a">${accepted.length}</div>
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage)">Accepted</div>
+        </div>
+        <div style="text-align:center;padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold)">${pending.length}</div>
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage)">Awaiting</div>
+        </div>
+        <div style="text-align:center;padding:0.875rem;background:white;border-radius:10px;border:1px solid rgba(212,146,10,0.1)">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--crimson)">₱${totalCommitted.toLocaleString()}</div>
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage)">Committed</div>
+        </div>
+      </div>
+    </div>`;
+  } else if (resp) { resp.innerHTML = ''; }
+}
+
+function updateSponsorInviteStatus(id, status) {
+  const invites = getSponsorInvites();
+  const idx = invites.findIndex(i=>i.id===id);
+  if (idx !== -1) { invites[idx].status = status; invites[idx].response = `Status updated to ${status} on ${new Date().toLocaleDateString('en-PH')}`; }
+  saveSponsorInvites(invites);
+  renderSponsorInvites(currentSponsorFilter);
+  renderOverview();
+  showToast(`Sponsor invitation ${status}.`, status==='accepted'?'success':'info');
+}
+
+function removeSponsorInvite(id) {
+  const invites = getSponsorInvites().filter(i=>i.id!==id);
+  saveSponsorInvites(invites);
+  renderSponsorInvites(currentSponsorFilter);
+  showToast('Invitation removed.','info');
+}
+
+// ── ACCOMMODATIONS ────────────────────────────────────────────
+const partnerHotels = [
+  { id:1, name:"Marquee Mall Hotel",    stars:4, rooms:450, location:"San Fernando",   contact:"045-123-4567", amenities:["WiFi","Pool","Parking","Restaurant","Conference Room"], emoji:"🏨", status:"confirmed" },
+  { id:2, name:"Hotel Stotsenberg",    stars:4, rooms:200, location:"Clark",            contact:"045-234-5678", amenities:["WiFi","Pool","Parking","Restaurant","Meeting Rooms"],   emoji:"🏩", status:"confirmed" },
+  { id:3, name:"Quest Hotel Clark",    stars:4, rooms:300, location:"Clark Freeport",   contact:"045-567-8901", amenities:["WiFi","Pool","Gym","Parking","Conference Room"],       emoji:"🏨", status:"confirmed" },
+  { id:4, name:"Pampanga Suites",      stars:3, rooms:120, location:"San Fernando",    contact:"045-345-6789", amenities:["WiFi","Parking","Restaurant","Laundry"],               emoji:"🏩", status:"pending" }
+];
+
+function renderAccommodations() {
+  populateEventSelects(); // refresh picker
+  const hotelInvites = getInvitations().filter(i=>i.bizType==='hotel');
+  document.getElementById('orgStatHotelInvites').textContent = hotelInvites.length;
+  const list = document.getElementById('partnerHotelsList');
+  if (!list) return;
+  list.innerHTML = partnerHotels.map(h => `
+    <div style="border:1px solid rgba(212,146,10,0.12);border-radius:12px;padding:1.1rem;background:white;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(212,146,10,0.3)'" onmouseout="this.style.borderColor='rgba(212,146,10,0.12)'">
+      <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:0.625rem">
+        <span style="font-size:1.4rem">${h.emoji}</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700">${h.name}</div>
+          <div style="font-size:0.68rem;color:var(--sage)">${'⭐'.repeat(h.stars)} · ${h.location}</div>
+        </div>
+        <span class="badge badge-${h.status==='confirmed'?'accepted':'pending'}" style="margin-left:auto">${h.status==='confirmed'?'✅ Partner':'⏳ Pending'}</span>
+      </div>
+      <div style="display:flex;gap:1.5rem;font-size:0.75rem;margin-bottom:0.625rem">
+        <span>🛏️ <strong>${h.rooms}</strong> rooms</span>
+        <span>📞 ${h.contact}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin-bottom:0.75rem">
+        ${h.amenities.map(a=>`<span style="background:rgba(212,146,10,0.07);color:var(--sage);padding:0.12rem 0.45rem;border-radius:4px;font-size:0.6rem;font-weight:700">${a}</span>`).join('')}
+      </div>
+      <div style="display:flex;gap:0.5rem">
+        <a href="tel:${h.contact}" class="btn-fire btn-sm" style="font-size:0.68rem">📞 Contact</a>
+        <a href="../pages/accommodations.html" class="btn-ghost btn-sm" style="font-size:0.68rem;text-decoration:none">🤖 AI Match</a>
+      </div>
+    </div>`).join('');
+}
+
+function renderAccomForEvent() {
+  const eventId = parseInt(document.getElementById('accomEventPicker').value);
+  const detail  = document.getElementById('accomEventDetail');
+  if (!eventId) { detail.textContent = 'Select an event to view and manage its hotel recommendations.'; return; }
+  const all   = [...PampangaDB.events, ...getOrgEvents()];
+  const event = all.find(e=>e.id===eventId);
+  const hotelInvites = getInvitations().filter(i=>i.bizType==='hotel' && i.eventId===eventId);
+  detail.innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:0.875rem">
+      <span style="font-size:1.5rem">${event.image}</span>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700">${event.name}</div>
+        <div style="font-size:0.75rem;color:var(--sage)">${event.date} · ${event.location} · Capacity: ${(event.capacity||0).toLocaleString()}</div>
+      </div>
+      <a href="../pages/accommodations.html" class="btn-fire btn-sm" style="margin-left:auto;text-decoration:none;font-size:0.7rem">🤖 AI Match Hotels</a>
+    </div>
+    <div style="display:flex;gap:0.875rem;flex-wrap:wrap;margin-bottom:0.875rem">
+      <div style="padding:0.625rem 1rem;background:rgba(212,146,10,0.06);border-radius:8px;font-size:0.75rem"><strong>${hotelInvites.length}</strong> hotel invitations sent</div>
+      <div style="padding:0.625rem 1rem;background:rgba(22,163,74,0.06);border-radius:8px;font-size:0.75rem"><strong>${hotelInvites.filter(i=>i.status==='accepted').length}</strong> accepted</div>
+      <div style="padding:0.625rem 1rem;background:rgba(212,146,10,0.06);border-radius:8px;font-size:0.75rem"><strong>${hotelInvites.filter(i=>i.status==='pending').length}</strong> pending</div>
+    </div>
+    ${hotelInvites.length
+      ? hotelInvites.map(inv=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(212,146,10,0.08);font-size:0.78rem"><span>🏨 ${inv.bizName}</span>${statusBadge(inv.status)}</div>`).join('')
+      : `<div style="font-size:0.8rem;color:var(--sage)">No hotels have been invited for this event yet. <a href="../pages/accommodations.html" style="color:var(--crimson)">Use AI Matching →</a></div>`}
+  `;
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────
+function loadSettings() {
+  const s = Storage.get('org_settings') || {};
+  if (s.name)     document.getElementById('settingName').value     = s.name;
+  if (s.email)    document.getElementById('settingEmail').value    = s.email;
+  if (s.org)      document.getElementById('settingOrg').value      = s.org;
+  if (s.phone)    document.getElementById('settingPhone').value    = s.phone;
+  if (s.category) document.getElementById('settingCategory').value = s.category;
+  if (s.price !== undefined) document.getElementById('settingPrice').value = s.price;
+  if (s.eco !== undefined)   document.getElementById('settingEco').value   = s.eco;
+  if (s.name) {
+    document.getElementById('sidebarNameOrg').textContent  = s.name;
+    document.getElementById('sidebarAvatarOrg').textContent = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  }
+  if (s.email) document.getElementById('sidebarEmailOrg').textContent = s.email;
+}
+
+function saveSettings() {
+  const s = {
+    name:     document.getElementById('settingName').value.trim(),
+    email:    document.getElementById('settingEmail').value.trim(),
+    org:      document.getElementById('settingOrg').value.trim(),
+    phone:    document.getElementById('settingPhone').value.trim(),
+    category: document.getElementById('settingCategory').value,
+    price:    document.getElementById('settingPrice').value,
+    eco:      document.getElementById('settingEco').value
+  };
+  Storage.set('org_settings', s);
+  if (s.name) {
+    document.getElementById('sidebarNameOrg').textContent  = s.name;
+    document.getElementById('sidebarAvatarOrg').textContent = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  }
+  if (s.email) document.getElementById('sidebarEmailOrg').textContent = s.email;
+  showToast('Settings saved!', 'success');
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
+  populateEventSelects();
+  showPage('orgOverview');
+  // pre-populate sample data on first visit
+  if (!Storage.get('org_applications')) saveApplications(sampleApplications());
+});
+
+// expose globals for inline onclick
+window.openModal          = openModal;
+window.closeModal         = closeModal;
+window.showPage           = showPage;
+window.saveEvent          = saveEvent;
+window.editEvent          = editEvent;
+window.deleteEvent        = deleteEvent;
+window.postAnnouncement   = postAnnouncement;
+window.deleteAnnouncement = deleteAnnouncement;
+window.sendInvitation     = sendInvitation;
+window.updateInviteStatus = updateInviteStatus;
+window.renderInvitationsTable = renderInvitationsTable;
+window.setBizFilter       = setBizFilter;
+window.filterBusinesses   = filterBusinesses;
+window.quickInvite        = quickInvite;
+window.setAppFilter       = setAppFilter;
+window.viewApplication    = viewApplication;
+window.updat
+</script>
+</body>
+</html>
