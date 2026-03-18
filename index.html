@@ -205,7 +205,7 @@ body::before {
   top: 66px; left: 0; right: 0;
   background: rgba(18,8,8,0.98); backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(212,146,10,0.15);
-  padding: 1.5rem 2rem; z-index: 999;
+  padding: 1.5rem 2rem; z-index: 1001;
   flex-direction: column; gap: 0.875rem;
 }
 .mobile-menu.open { display: flex; }
@@ -1059,16 +1059,120 @@ body::before {
 
 /* RESPONSIVE */
 @media(max-width:1024px) { .grid-4{grid-template-columns:repeat(2,1fr)} .grid-3{grid-template-columns:repeat(2,1fr)} }
-@media(max-width:768px) {
-  .nav-links{display:none} .nav-mobile-toggle{display:block}
-  .grid-3,.grid-2{grid-template-columns:1fr} .grid-4{grid-template-columns:repeat(2,1fr)}
-  .hero h1{font-size:2.5rem} .hero-content{grid-template-columns:1fr!important} .hero-text-inner{grid-template-columns:1fr!important}
-  .hero-right{display:none}
-  .sidebar{transform:translateX(-100%);transition:transform 0.3s} .sidebar.open{transform:translateX(0)}
-  .dashboard-main{margin-left:0} .section{padding:3rem 0}
-  .page-header::after{display:none}
+/* ════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 1024px)
+   ════════════════════════════════════════════ */
+@media(max-width:1024px) {
+  .grid-4 { grid-template-columns: repeat(2,1fr); }
+  .grid-3 { grid-template-columns: repeat(2,1fr); }
+  .hero-overlay-content { grid-template-columns: 1fr !important; gap: 2rem; }
+  .hero-right { display: none; }
 }
-@media(max-width:480px) { .grid-4{grid-template-columns:1fr} .hero-ctas{flex-direction:column} }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 768px)
+   ════════════════════════════════════════════ */
+@media(max-width:768px) {
+
+  /* ── Navbar ── */
+  .nav-links { display: none; }
+  .nav-mobile-toggle { display: block; }
+  .navbar { padding: 0 1rem; height: 58px; }
+
+  /* ── Mobile menu ── */
+  .mobile-menu {
+    top: 58px;
+    padding: 1.25rem 1.25rem;
+    gap: 0.75rem;
+  }
+  .mobile-menu a {
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(212,146,10,0.08);
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+
+  /* ── Hero ── */
+  .hero { height: auto; min-height: 100svh; }
+  .hero-overlay-content {
+    grid-template-columns: 1fr !important;
+    padding: 1.25rem !important;
+    gap: 1.5rem;
+    padding-bottom: 6rem !important;
+  }
+  .hero-overlay-content h1 { font-size: clamp(1.9rem, 7vw, 2.8rem) !important; }
+  .hero-overlay-content .hero-desc { font-size: 0.85rem !important; }
+  .hero-right { display: none !important; }
+  .hero-ctas { flex-direction: column; gap: 0.6rem; }
+  .hero-ctas a, .hero-ctas button { width: 100%; justify-content: center; }
+  .hero-stats { grid-template-columns: repeat(2,1fr) !important; gap: 0.5rem; }
+  .hero-eyebrow { font-size: 0.6rem !important; }
+  .hero-text-band { padding: 1.5rem 1rem !important; }
+  .video-toggle-btn { bottom: 1.25rem; right: 1rem; font-size: 0.65rem; }
+  .mute-toggle-btn  { bottom: 1.25rem; right: 9rem;  font-size: 0.65rem; display: none; }
+
+  /* ── Grids ── */
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr !important; }
+  .product-grid { grid-template-columns: repeat(2,1fr) !important; }
+
+  /* ── Sections ── */
+  .section { padding: 2.5rem 0; }
+  .container { padding: 0 1rem; }
+  .section-title { font-size: clamp(1.5rem, 5vw, 2rem) !important; }
+  .section-sub { font-size: 0.82rem; }
+
+  /* ── Cards ── */
+  .event-card { margin-bottom: 0; }
+  .card-banner { height: 150px; }
+
+  /* ── Calendar grid ── */
+  #calGrid { grid-template-columns: 1fr !important; }
+
+  /* ── Eco section ── */
+  [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns:1fr 1fr"]  { grid-template-columns: 1fr !important; }
+
+  /* ── CTA section ── */
+  [style*="justify-content:center"] { padding: 0 1rem; }
+
+  /* ── Footer ── */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 2rem; }
+  .footer { padding: 3rem 0 1.5rem; }
+
+  /* ── Announcements grid ── */
+  #homeAnnGrid { grid-template-columns: 1fr !important; }
+
+  /* ── Dashboard sidebar ── */
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+  .sidebar.open { transform: translateX(0); }
+  .dashboard-main { margin-left: 0; }
+
+  /* ── Page header ── */
+  .page-header::after { display: none; }
+
+  /* ── Filter tabs ── */
+  .filter-tabs { gap: 0.3rem; }
+  .filter-tab  { font-size: 0.65rem; padding: 0.35rem 0.7rem; }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE (≤ 480px)
+   ════════════════════════════════════════════ */
+@media(max-width:480px) {
+  .grid-4 { grid-template-columns: 1fr !important; }
+  .product-grid { grid-template-columns: 1fr !important; }
+  .hero-stats { grid-template-columns: 1fr 1fr !important; }
+  .hero-overlay-content h1 { font-size: clamp(1.7rem, 8vw, 2.2rem) !important; }
+  .hero-ctas { flex-direction: column; }
+  .btn-fire, .btn-eco { font-size: 0.78rem; padding: 0.65rem 1.25rem; }
+  .section-title { font-size: clamp(1.3rem, 6vw, 1.8rem) !important; }
+  .navbar { padding: 0 0.875rem; }
+  #homeAnnGrid { grid-template-columns: 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr !important; }
+  .cart-drawer { border-radius: 12px 12px 0 0; margin-top: auto; max-width: 100%; }
+  .cart-overlay { padding: 0; align-items: flex-end; }
+}
+
 </style>
 </head>
 <body>
@@ -1112,7 +1216,7 @@ body::before {
     <a href="login.html" class="btn-nav-outline">Log In</a>
     <a href="register.html" class="btn-nav-primary">Sign Up</a>
   </div>
-  <button class="nav-mobile-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">☰</button>
+  <button class="nav-mobile-toggle" id="mobileToggleBtn">☰</button>
 </nav>
 <div class="mobile-menu">
   <a href="index.html">Home</a>
@@ -1756,11 +1860,34 @@ function renderTicketHTML(ticket) {
 
 // ===== NAVBAR =====
 function initNavbar() {
-  const toggle = document.querySelector('.nav-mobile-toggle');
+  const toggle   = document.getElementById('mobileToggleBtn') || document.querySelector('.nav-mobile-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
-  if (toggle && mobileMenu) {
-    toggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-  }
+  if (!toggle || !mobileMenu) return;
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = mobileMenu.classList.toggle('open');
+    toggle.textContent = isOpen ? '✕' : '☰';
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Close when a menu link is clicked
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      toggle.textContent = '☰';
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!mobileMenu.contains(e.target) && !toggle.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+      toggle.textContent = '☰';
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
 // ===== CALENDAR =====
