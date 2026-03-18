@@ -218,6 +218,7 @@ body::before {
     <a href="events.html">Events</a>
     <a href="announcements.html" class="nav-active">Announcements</a>
     <a href="marketplace.html">Marketplace</a>
+    <a href="#" id="profileNavBtn" class="btn-nav-outline">Profile</a>
     <a href="login.html" class="btn-nav-outline">Log In</a>
     <a href="register.html" class="btn-nav-primary">🏮 Sign Up</a>
   </div>
@@ -228,6 +229,7 @@ body::before {
   <a href="events.html">Events</a>
   <a href="announcements.html">Announcements</a>
   <a href="marketplace.html">Marketplace</a>
+  <a href="#" id="profileMobileBtn">My Dashboard</a>
   <a href="login.html">Log In</a>
   <a href="register.html">Sign Up</a>
 </div>
@@ -375,6 +377,43 @@ const Storage = {
   set:    (k, v) => localStorage.setItem(k, JSON.stringify(v)),
   remove: (k) => localStorage.removeItem(k)
 };
+
+function getDashboardPathForRole(role) {
+  const rolePathMap = {
+    user: 'dashboard/user-dashboard.html',
+    admin: 'dashboard/admin-dashboard.html',
+    business: 'dashboard/business-dashboard.html',
+    hotel: 'dashboard/business-dashboard.html',
+    waste: 'dashboard/business-dashboard.html',
+    food: 'dashboard/business-dashboard.html',
+    organizer: 'dashboard/organizer-dashboard.html',
+    sponsor: 'dashboard/sponsor-dashboard.html'
+  };
+
+  return rolePathMap[role] || rolePathMap.user;
+}
+
+function openMyDashboard(event) {
+  if (event) event.preventDefault();
+
+  const user = Storage.get('pampanga_user');
+  if (!user || !user.role) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  window.location.href = getDashboardPathForRole(user.role);
+}
+
+function initProfileLinks() {
+  const profileNavBtn = document.getElementById('profileNavBtn');
+  const profileMobileBtn = document.getElementById('profileMobileBtn');
+
+  if (profileNavBtn) profileNavBtn.addEventListener('click', openMyDashboard);
+  if (profileMobileBtn) profileMobileBtn.addEventListener('click', openMyDashboard);
+}
+
+document.addEventListener('DOMContentLoaded', initProfileLinks);
 
 // ── SAMPLE DATA ──
 const SAMPLE_ANNOUNCEMENTS = [
