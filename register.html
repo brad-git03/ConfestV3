@@ -825,6 +825,85 @@ body::before {
   .page-header::after{display:none}
 }
 @media(max-width:480px) { .grid-4{grid-template-columns:1fr} .hero-ctas{flex-direction:column} }
+
+/* ── DOCUMENT UPLOAD SECTION ── */
+.upload-section {
+  margin-bottom: 1.25rem;
+  border: 1.5px solid rgba(212,146,10,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.upload-section-header {
+  background: linear-gradient(135deg, rgba(27,58,45,0.06), rgba(212,146,10,0.05));
+  padding: 0.65rem 0.875rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(212,146,10,0.12);
+}
+.upload-section-title {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--forest);
+}
+.upload-section-badge {
+  margin-left: auto; font-size: 0.58rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.15rem 0.5rem; border-radius: 20px;
+}
+.upload-section-badge.required {
+  background: rgba(196,30,58,0.1); color: var(--crimson);
+  border: 1px solid rgba(196,30,58,0.2);
+}
+.upload-section-badge.optional {
+  background: rgba(75,124,95,0.1); color: var(--sage);
+  border: 1px solid rgba(75,124,95,0.2);
+}
+.upload-section-body { padding: 0.875rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.upload-item { display: flex; flex-direction: column; gap: 0.3rem; }
+.upload-label {
+  font-size: 0.72rem; font-weight: 700; color: var(--charcoal);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.upload-label .req { color: var(--crimson); font-size: 0.8rem; }
+.upload-label .hint { font-size: 0.62rem; font-weight: 400; color: var(--sage); margin-left: auto; }
+.upload-drop {
+  border: 1.5px dashed rgba(212,146,10,0.3);
+  border-radius: 8px; padding: 0.75rem 1rem;
+  background: rgba(251,244,232,0.5);
+  display: flex; align-items: center; gap: 0.75rem;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.upload-drop:hover { border-color: var(--gold); background: rgba(212,146,10,0.04); }
+.upload-drop.has-file { border-color: var(--sage); background: rgba(27,58,45,0.04); border-style: solid; }
+.upload-drop input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-icon {
+  width: 34px; height: 34px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(212,146,10,0.1); font-size: 1rem;
+  transition: background 0.2s;
+}
+.upload-drop.has-file .upload-icon { background: rgba(27,58,45,0.1); }
+.upload-meta { flex: 1; min-width: 0; }
+.upload-meta .upload-cta {
+  font-size: 0.72rem; font-weight: 700; color: var(--charcoal);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.upload-meta .upload-sub { font-size: 0.62rem; color: var(--sage); margin-top: 0.1rem; }
+.upload-drop.has-file .upload-meta .upload-cta { color: var(--forest); }
+.upload-status {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; background: rgba(212,146,10,0.1);
+  transition: all 0.25s;
+}
+.upload-drop.has-file .upload-status { background: rgba(27,58,45,0.15); color: var(--moss); }
+.upload-note {
+  font-size: 0.62rem; color: var(--sage); line-height: 1.5;
+  padding: 0.5rem 0.875rem 0.65rem;
+  border-top: 1px solid rgba(212,146,10,0.08);
+  background: rgba(251,244,232,0.4);
+}
+
 </style>
 </head>
 <body>
@@ -905,8 +984,305 @@ body::before {
           <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="rEmail" placeholder="your@email.com" required></div>
           <div class="form-group"><label class="form-label">Mobile</label><input type="tel" class="form-input" placeholder="09XX-XXX-XXXX"></div>
           <div id="bizF" style="display:none">
-            <div class="form-group"><label class="form-label">Business Name</label><input type="text" class="form-input" placeholder="e.g. Kapampangan Sweets Co."></div>
-            <div class="form-group"><label class="form-label">Business Type</label><select class="form-select"><option>Food & Beverage</option><option>Arts & Crafts</option><option>Event Organizer</option><option>Tourism Services</option></select></div>
+
+            <!-- ── BUSINESS FIELDS ── -->
+            <div id="bizOnly" style="display:none">
+              <div class="form-group"><label class="form-label">Business Name <span style="color:var(--crimson)">*</span></label><input type="text" class="form-input" id="bizName" placeholder="e.g. Kapampangan Sweets Co." /></div>
+              <div class="form-group"><label class="form-label">Business Type <span style="color:var(--crimson)">*</span></label>
+                <select class="form-select" id="bizType">
+                  <option value="">Select type…</option>
+                  <option>Food & Beverage</option>
+                  <option>Arts & Crafts</option>
+                  <option>Hotel / Accommodation</option>
+                  <option>Waste Management</option>
+                  <option>Tourism Services</option>
+                  <option>Retail / Pasalubong</option>
+                  <option>Transportation</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Business Address <span style="color:var(--crimson)">*</span></label><input type="text" class="form-input" id="bizAddress" placeholder="Street, Barangay, Municipality, Pampanga" /></div>
+
+              <!-- Business Documents -->
+              <div style="margin-bottom:0.5rem;margin-top:1rem">
+                <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
+                  <span style="display:inline-block;width:18px;height:1.5px;background:currentColor;border-radius:2px"></span>
+                  Business Documents
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">🏛️</span>
+                    <span class="upload-section-title">Government Permits</span>
+                    <span class="upload-section-badge required">Required</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">Business Permit <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-bizPermit" onclick="triggerUpload('file-bizPermit')">
+                        <input type="file" id="file-bizPermit" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-bizPermit','name-bizPermit')">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-bizPermit">Click to upload</div>
+                          <div class="upload-sub">Mayor's Permit / Business License</div>
+                        </div>
+                        <div class="upload-status" id="status-bizPermit">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Municipal / City Permit <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-munPermit" onclick="triggerUpload('file-munPermit')">
+                        <input type="file" id="file-munPermit" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-munPermit','name-munPermit')">
+                        <div class="upload-icon">🏢</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-munPermit">Click to upload</div>
+                          <div class="upload-sub">Municipal / City Hall permit</div>
+                        </div>
+                        <div class="upload-status" id="status-munPermit">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Provincial Permit <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-provPermit" onclick="triggerUpload('file-provPermit')">
+                        <input type="file" id="file-provPermit" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-provPermit','name-provPermit')">
+                        <div class="upload-icon">🏛️</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-provPermit">Click to upload</div>
+                          <div class="upload-sub">Provincial Government clearance</div>
+                        </div>
+                        <div class="upload-status" id="status-provPermit">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">📋 All permits must be current (valid for the current year). Expired permits will not be accepted.</div>
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">📜</span>
+                    <span class="upload-section-title">Business Registration</span>
+                    <span class="upload-section-badge required">Required</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">DTI / SEC / CDA Certificate <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-bizCert" onclick="triggerUpload('file-bizCert')">
+                        <input type="file" id="file-bizCert" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-bizCert','name-bizCert')">
+                        <div class="upload-icon">📜</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-bizCert">Click to upload</div>
+                          <div class="upload-sub">DTI for sole proprietors · SEC for corporations · CDA for cooperatives</div>
+                        </div>
+                        <div class="upload-status" id="status-bizCert">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">BIR Certificate of Registration <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-birCert" onclick="triggerUpload('file-birCert')">
+                        <input type="file" id="file-birCert" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-birCert','name-birCert')">
+                        <div class="upload-icon">🧾</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-birCert">Click to upload</div>
+                          <div class="upload-sub">BIR Form 2303 — Certificate of Registration</div>
+                        </div>
+                        <div class="upload-status" id="status-birCert">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">📋 Registration certificates must match the business name provided above.</div>
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">📎</span>
+                    <span class="upload-section-title">Supporting Documents</span>
+                    <span class="upload-section-badge optional">Optional</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">Sanitary / Health Permit<span class="hint">For food & beverage businesses</span></div>
+                      <div class="upload-drop" id="drop-sanitary" onclick="triggerUpload('file-sanitary')">
+                        <input type="file" id="file-sanitary" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-sanitary','name-sanitary')">
+                        <div class="upload-icon">🏥</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-sanitary">Click to upload</div>
+                          <div class="upload-sub">Required for food stalls, restaurants & catering</div>
+                        </div>
+                        <div class="upload-status" id="status-sanitary">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Other Supporting Documents<span class="hint">Franchises, accreditations, etc.</span></div>
+                      <div class="upload-drop" id="drop-bizOther" onclick="triggerUpload('file-bizOther')">
+                        <input type="file" id="file-bizOther" accept=".pdf,.jpg,.jpeg,.png,.zip" multiple onchange="onFileChosen(this,'drop-bizOther','name-bizOther')">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-bizOther">Click to upload</div>
+                          <div class="upload-sub">Multiple files accepted · PDF, JPG, PNG, ZIP</div>
+                        </div>
+                        <div class="upload-status" id="status-bizOther">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">💡 Additional documents help speed up your verification process.</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── ORGANIZER FIELDS ── -->
+            <div id="orgOnly" style="display:none">
+              <div class="form-group"><label class="form-label">Organization / Company Name <span style="color:var(--crimson)">*</span></label><input type="text" class="form-input" id="orgName" placeholder="e.g. Pampanga Events Unlimited" /></div>
+              <div class="form-group"><label class="form-label">Organizer Type <span style="color:var(--crimson)">*</span></label>
+                <select class="form-select" id="orgType">
+                  <option value="">Select type…</option>
+                  <option>Government Agency / LGU</option>
+                  <option>Non-Profit / NGO</option>
+                  <option>Private Event Company</option>
+                  <option>Cultural / Heritage Group</option>
+                  <option>Educational Institution</option>
+                  <option>Religious Organization</option>
+                  <option>Individual Organizer</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Years of Experience</label>
+                <select class="form-select" id="orgExp">
+                  <option value="">Select…</option>
+                  <option>Less than 1 year</option>
+                  <option>1–3 years</option>
+                  <option>3–5 years</option>
+                  <option>5–10 years</option>
+                  <option>More than 10 years</option>
+                </select>
+              </div>
+
+              <!-- Organizer Documents -->
+              <div style="margin-bottom:0.5rem;margin-top:1rem">
+                <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
+                  <span style="display:inline-block;width:18px;height:1.5px;background:currentColor;border-radius:2px"></span>
+                  Organizer Documents
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">🪪</span>
+                    <span class="upload-section-title">Identity Verification</span>
+                    <span class="upload-section-badge required">Required</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">Government-Issued ID <span class="req">*</span><span class="hint">Front side</span></div>
+                      <div class="upload-drop" id="drop-idFront" onclick="triggerUpload('file-idFront')">
+                        <input type="file" id="file-idFront" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChosen(this,'drop-idFront','name-idFront')">
+                        <div class="upload-icon">🪪</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-idFront">Click to upload</div>
+                          <div class="upload-sub">Passport · PhilSys · Driver's License · UMID · PRC ID</div>
+                        </div>
+                        <div class="upload-status" id="status-idFront">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Government-Issued ID <span class="req">*</span><span class="hint">Back side</span></div>
+                      <div class="upload-drop" id="drop-idBack" onclick="triggerUpload('file-idBack')">
+                        <input type="file" id="file-idBack" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChosen(this,'drop-idBack','name-idBack')">
+                        <div class="upload-icon">🪪</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-idBack">Click to upload</div>
+                          <div class="upload-sub">Back side of the same ID</div>
+                        </div>
+                        <div class="upload-status" id="status-idBack">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Secondary ID <span class="hint">Optional but recommended</span></div>
+                      <div class="upload-drop" id="drop-id2" onclick="triggerUpload('file-id2')">
+                        <input type="file" id="file-id2" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChosen(this,'drop-id2','name-id2')">
+                        <div class="upload-icon">🪪</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-id2">Click to upload</div>
+                          <div class="upload-sub">Voter's ID · SSS · Philhealth · TIN</div>
+                        </div>
+                        <div class="upload-status" id="status-id2">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">📋 IDs must be valid, unexpired, and clearly readable. Low-quality or cropped images will be rejected.</div>
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">🎖️</span>
+                    <span class="upload-section-title">Organizer Certification</span>
+                    <span class="upload-section-badge required">Required</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">Organizer Accreditation / Certification <span class="req">*</span><span class="hint">PDF or image</span></div>
+                      <div class="upload-drop" id="drop-orgCert" onclick="triggerUpload('file-orgCert')">
+                        <input type="file" id="file-orgCert" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-orgCert','name-orgCert')">
+                        <div class="upload-icon">🎖️</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-orgCert">Click to upload</div>
+                          <div class="upload-sub">DOT / LGU accreditation or event organizer certification</div>
+                        </div>
+                        <div class="upload-status" id="status-orgCert">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">SEC / DTI / NGO Registration<span class="hint">If applicable</span></div>
+                      <div class="upload-drop" id="drop-orgReg" onclick="triggerUpload('file-orgReg')">
+                        <input type="file" id="file-orgReg" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-orgReg','name-orgReg')">
+                        <div class="upload-icon">📜</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-orgReg">Click to upload</div>
+                          <div class="upload-sub">Organization registration certificate</div>
+                        </div>
+                        <div class="upload-status" id="status-orgReg">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">📋 If your organization is an LGU or government body, an official letter of authorization is accepted in place of accreditation.</div>
+                </div>
+
+                <div class="upload-section">
+                  <div class="upload-section-header">
+                    <span style="font-size:1rem">📎</span>
+                    <span class="upload-section-title">Supporting Documents</span>
+                    <span class="upload-section-badge optional">Optional</span>
+                  </div>
+                  <div class="upload-section-body">
+                    <div class="upload-item">
+                      <div class="upload-label">Portfolio / Past Event Photos<span class="hint">Helps build credibility</span></div>
+                      <div class="upload-drop" id="drop-orgPortfolio" onclick="triggerUpload('file-orgPortfolio')">
+                        <input type="file" id="file-orgPortfolio" accept=".pdf,.jpg,.jpeg,.png,.zip" multiple onchange="onFileChosen(this,'drop-orgPortfolio','name-orgPortfolio')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-orgPortfolio">Click to upload</div>
+                          <div class="upload-sub">Multiple files accepted · PDF, JPG, PNG, ZIP</div>
+                        </div>
+                        <div class="upload-status" id="status-orgPortfolio">+</div>
+                      </div>
+                    </div>
+                    <div class="upload-item">
+                      <div class="upload-label">Letter of Intent / Authorization<span class="hint">From parent org or LGU</span></div>
+                      <div class="upload-drop" id="drop-orgLetter" onclick="triggerUpload('file-orgLetter')">
+                        <input type="file" id="file-orgLetter" accept=".pdf,.jpg,.jpeg,.png" onchange="onFileChosen(this,'drop-orgLetter','name-orgLetter')">
+                        <div class="upload-icon">✉️</div>
+                        <div class="upload-meta">
+                          <div class="upload-cta" id="name-orgLetter">Click to upload</div>
+                          <div class="upload-sub">Official authorization letter</div>
+                        </div>
+                        <div class="upload-status" id="status-orgLetter">+</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-note">💡 Organizers with complete documentation get verified faster and gain full platform access sooner.</div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
           <div class="form-group"><label class="form-label">Password</label>
             <div style="position:relative"><input type="password" class="form-input" id="rPwd" placeholder="Min. 8 characters" required minlength="8" style="padding-right:3rem">
@@ -1934,6 +2310,8 @@ function selType(t){
     else{el.style.border='1.5px solid rgba(212,146,10,0.2)';el.style.background='white';el.querySelector('div:last-child').style.color='var(--sage)';}
   });
   document.getElementById('bizF').style.display=t!=='user'?'block':'none';
+  document.getElementById('bizOnly').style.display=t==='business'?'block':'none';
+  document.getElementById('orgOnly').style.display=t==='organizer'?'block':'none';
 }
 function togglePwd(id){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';}
 function handleReg(e){
@@ -1941,11 +2319,39 @@ function handleReg(e){
   const p=document.getElementById('rPwd').value,c=document.getElementById('rCon').value;
   if(p!==c){showToast('Passwords do not match!','error');return;}
   const fn=document.getElementById('rFN').value,ln=document.getElementById('rLN').value,em=document.getElementById('rEmail').value;
-  const role=_stype==='user'?'user':'business';
+  const role=_stype==='user'?'user':_stype==='organizer'?'organizer':'business';
   Storage.set('pampanga_user',{name:fn+' '+ln,email:em,role});
   showToast('Account created! Welcome to Pampanga Platform 🏮','success');
-  setTimeout(()=>{window.location.href=role==='business'?'dashboard/business-dashboard.html':'dashboard/user-dashboard.html';},1100);
+  setTimeout(()=>{
+    if(role==='business') window.location.href='dashboard/business-dashboard.html';
+    else if(role==='organizer') window.location.href='dashboard/organizer-dashboard.html';
+    else window.location.href='dashboard/user-dashboard.html';
+  },1100);
 }
+
+function triggerUpload(id) {
+  // The input's onclick bubbles, so we stop propagation and trigger programmatically
+  document.getElementById(id).click();
+}
+function onFileChosen(input, dropId, nameId) {
+  const drop = document.getElementById(dropId);
+  const nameEl = document.getElementById(nameId);
+  const statusEl = document.getElementById('status-' + dropId.replace('drop-',''));
+  if (input.files && input.files.length > 0) {
+    const files = Array.from(input.files);
+    const label = files.length === 1
+      ? files[0].name
+      : files.length + ' files selected';
+    nameEl.textContent = label;
+    drop.classList.add('has-file');
+    if (statusEl) statusEl.textContent = '✓';
+  } else {
+    nameEl.textContent = 'Click to upload';
+    drop.classList.remove('has-file');
+    if (statusEl) statusEl.textContent = '+';
+  }
+}
+
 </script>
 </body>
 </html>
